@@ -5,7 +5,6 @@ import { useReveal } from '@/hooks/useReveal';
 const contactLinks = [
   { label: '✉ Email', href: 'mailto:atnanseptian1@gmail.com' },
   { label: '⌥ GitHub', href: 'https://github.com/Atnan49', external: true },
-  { label: '↗ Freelancer', href: 'https://freelancer.com/u/atnan49', external: true },
 ];
 
 export default function Contact() {
