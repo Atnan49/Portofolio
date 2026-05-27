@@ -22,7 +22,7 @@ export default function About() {
         <div className="about-content">
           <p className="section-label reveal">About</p>
           <p className="about-text reveal">
-            Informatics student &amp; freelance developer based in <em>Malang, Indonesia</em> —
+            Informatics student &amp; freelance developer based in <em>East Java, Indonesia</em> —
             building for the web, one thoughtful line at a time.
           </p>
           <p className="about-body reveal">
