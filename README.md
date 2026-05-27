@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Atnan Septian Wijanarko — Developer Portfolio
 
-## Getting Started
+Welcome to the repository of my personal portfolio website! This project is built using **Next.js 16**, **TypeScript**, and **Vanilla CSS** to present a clean, fast, and minimalist showcase of my selected work, tech stack, and experience.
 
-First, run the development server:
+🌐 **Live Website:** [https://project-6ivrc.vercel.app](https://project-6ivrc.vercel.app)
+
+---
+
+## 🎨 Design Philosophy & Aesthetics
+
+The website is designed with a premium, typography-focused editorial layout:
+- **Warm Minimalist Color Palette**: Warm background (`#F8F7F4`), sharp text, and a vibrant primary accent blue (`#1D4ED8`).
+- **Sophisticated Typography**: Uses Google Fonts (Cormorant for elegant serif display headings and Outfit for clean, highly-readable body text) imported via `next/font` for optimal performance.
+- **Dynamic Interactions**: Features scroll-triggered animations (fade-up and stagger reveals) using the `IntersectionObserver` API, alongside smooth micro-animations and interactive hover transitions.
+- **Responsive Layout**: Designed mobile-first, ensuring readability and layout integrity across all devices.
+
+---
+
+## ⚡ Tech Stack & Tools
+
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router & Static Generation)
+- **Language**: [TypeScript](https://www.typescriptlang.org/) (Type Safety)
+- **Styling**: Vanilla CSS (Global Design Tokens & Variables)
+- **Animations**: CSS Keyframes + Custom IntersectionObserver React hook
+- **Deployment**: [Vercel](https://vercel.com/) (Connected to GitHub branch for CI/CD)
+
+---
+
+## 📂 Project Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+portfolio/
+├── public/                 # Static assets (Profile picture, vector graphics)
+│   ├── profile.jpg         # 1:1 Optimized profile photo
+│   └── *.svg               # Next.js boilerplate vectors
+├── src/
+│   ├── app/                # Next.js App Router root segment
+│   │   ├── globals.css     # Design tokens, variables, component styles & media queries
+│   │   ├── icon.svg        # Custom monogram SVG favicon
+│   │   ├── layout.tsx      # Root layout, next/font imports, SEO metadata
+│   │   └── page.tsx        # Main page assembling the sections
+│   ├── components/         # Reusable structural components
+│   │   ├── About.tsx       # Bio & grid profile image layout
+│   │   ├── Contact.tsx     # Contact channels and external profiles
+│   │   ├── Divider.tsx     # Section dividers
+│   │   ├── Footer.tsx      # Copyright & location info
+│   │   ├── Hero.tsx        # Responsive hero with scroll-indicator
+│   │   ├── Navbar.tsx      # Fixed blur glassmorphism navigation & mobile toggle menu
+│   │   ├── Projects.tsx    # List-based project showcase with external links
+│   │   └── Skills.tsx      # Pill-based tech stack grid with featured badges
+│   └── hooks/
+│       └── useReveal.ts    # React Hook for triggering scroll-reveal animations
+└── vercel.json             # Framework presets override config
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To run the project locally, follow these steps:
 
-## Learn More
+### Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+Ensure you have [Node.js](https://nodejs.org/) installed (v18.x or newer recommended).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Installation & Run
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Atnan49/Portofolio.git
+   cd Portofolio
+   ```
 
-## Deploy on Vercel
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Start the local development server:**
+   ```bash
+   npm run dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. Open your browser and go to `http://localhost:3000`.
+
+---
+
+## 🛠️ Deploying Changes
+
+This project is connected directly to **Vercel** via GitHub integration.
+
+To update the live site:
+1. Make your changes locally.
+2. Commit and push your changes to GitHub:
+   ```bash
+   git add .
+   git commit -m "Your update message"
+   git push origin main
+   ```
+3. Vercel will automatically detect the commit, build, and deploy the new version of your portfolio.
