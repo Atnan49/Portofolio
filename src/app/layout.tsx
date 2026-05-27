@@ -18,19 +18,51 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://atnan.my.id'),
   title: 'Atnan Septian Wijanarko — Web Developer',
   description:
-    'Fullstack Web Developer from Malang, Indonesia. Building clean, purposeful web experiences.',
+    'Fullstack Web Developer from East Java, Indonesia. Building clean, purposeful web experiences.',
+  keywords: [
+    'Atnan Septian Wijanarko',
+    'Atnan Septian',
+    'Web Developer Malang',
+    'Fullstack Developer Indonesia',
+    'Portfolio Web Developer',
+    'React Developer',
+    'Next.js Developer'
+  ],
+  authors: [{ name: 'Atnan Septian Wijanarko', url: 'https://atnan.my.id' }],
+  creator: 'Atnan Septian Wijanarko',
   openGraph: {
     title: 'Atnan Septian Wijanarko — Web Developer',
     description:
-      'Fullstack Web Developer from Malang, Indonesia. Building clean, purposeful web experiences.',
+      'Fullstack Web Developer from East Java, Indonesia. Building clean, purposeful web experiences.',
+    url: 'https://atnan.my.id',
+    siteName: 'Atnan Septian Portfolio',
     type: 'website',
     locale: 'en_US',
+    images: [
+      {
+        url: '/profile.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Atnan Septian Wijanarko Portfolio Preview',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Atnan Septian Wijanarko — Web Developer',
+    description:
+      'Fullstack Web Developer from East Java, Indonesia. Building clean, purposeful web experiences.',
+    images: ['/profile.jpg'],
   },
   robots: {
     index: true,
     follow: true,
+  },
+  alternates: {
+    canonical: 'https://atnan.my.id',
   },
 };
 
