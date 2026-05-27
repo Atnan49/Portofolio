@@ -13,26 +13,27 @@ interface Project {
 const projects: Project[] = [
   {
     number: '01',
-    title: 'tarifter.com',
+    title: 'Video Downloder',
     description:
       'A multi-platform video downloader supporting TikTok, YouTube, Instagram, and Twitter/X. Built for speed and simplicity — no sign-up, no friction. Monetized with ad networks and deployed on Railway.',
     tags: ['Node.js', 'yt-dlp', 'Railway', 'Cloudflare'],
-    href: 'https://tarifter.com',
+    href: 'https://github.com/Atnan49/downloder_video',
   },
   {
     number: '02',
-    title: 'Seraphic.Std',
+    title: 'Seraphic-Std',
     description:
       'Landing page for a graphic design service brand based in Ngawi, East Java. Clean, conversion-focused design with WhatsApp order integration, portfolio gallery, and FAQ section. Delivered fully to client with hosting on Vercel.',
     tags: ['HTML', 'CSS', 'JavaScript', 'Vercel'],
-    href: 'https://seraphic-std-five.vercel.app',
+    href: 'https://github.com/Atnan49/Seraphic_std',
   },
   {
     number: '03',
-    title: 'HIMATIF Attendance System',
+    title: 'RepoBook',
     description:
-      'A real-time RFID card-based attendance system for the Informatics Student Association at UMS. Features live attendance tracking via WebSocket, role-based access, event management, and member card registration.',
-    tags: ['Laravel 11', 'Livewire 3', 'Laravel Reverb', 'MySQL', 'Spatie'],
+      'An interactive digital book repository allowing users to search, read, upload, and save PDF ebooks. Features secure PDF streaming to protect file sources, admin moderation, and reading statistics.',
+    tags: ['PHP', 'MySQL', 'Bootstrap', 'JavaScript', 'Docker'],
+    href: 'https://github.com/Atnan49/Repo_ebook',
   },
 ];
 
