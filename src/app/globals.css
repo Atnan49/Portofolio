@@ -716,29 +716,29 @@ section {
 .bg-line {
   width: 1px;
   height: 100%;
-  background: rgba(20, 20, 20, 0.03);
+  background: rgba(20, 20, 20, 0.07);
   position: relative;
   overflow: hidden;
   transition: background-color 0.3s ease;
 }
 
 .dark .bg-line {
-  background: rgba(248, 247, 244, 0.03);
+  background: rgba(248, 247, 244, 0.07);
 }
 
 .bg-line::after {
   content: '';
   position: absolute;
-  top: -20vh;
+  top: -25vh;
   left: 0;
   width: 1px;
-  height: 20vh;
-  background: linear-gradient(to bottom, transparent, rgba(20, 20, 20, 0.1), transparent);
+  height: 25vh;
+  background: linear-gradient(to bottom, transparent, rgba(20, 20, 20, 0.45), transparent);
   animation: lineRun 12s infinite linear;
 }
 
 .dark .bg-line::after {
-  background: linear-gradient(to bottom, transparent, rgba(248, 247, 244, 0.15), transparent);
+  background: linear-gradient(to bottom, transparent, rgba(248, 247, 244, 0.65), transparent);
 }
 
 .bg-line-1::after {
