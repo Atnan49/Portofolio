@@ -40,7 +40,9 @@ export default function Navbar() {
 
   return (
     <nav id="navbar" className={`nav${scrolled ? ' scrolled' : ''}`}>
-      <a href="#" className="nav-logo">ASW.</a>
+      <a href="#" className="nav-logo" aria-label="Home">
+        <img src="/icon.svg" alt="ASW" width="32" height="32" style={{ display: 'block' }} />
+      </a>
 
       <div className="nav-actions">
         <button
