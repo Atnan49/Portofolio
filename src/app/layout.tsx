@@ -94,10 +94,11 @@ export default function RootLayout({
       </head>
       <body>
         <div className="bg-grid" />
-        <div className="bg-blobs">
-          <div className="blob blob-1" />
-          <div className="blob blob-2" />
-          <div className="blob blob-3" />
+        <div className="bg-lines">
+          <div className="bg-line bg-line-1" />
+          <div className="bg-line bg-line-2" />
+          <div className="bg-line bg-line-3" />
+          <div className="bg-line bg-line-4" />
         </div>
         {children}
       </body>
