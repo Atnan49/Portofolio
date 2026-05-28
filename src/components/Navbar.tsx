@@ -84,6 +84,7 @@ export default function Navbar() {
         <li><a href="#about" onClick={handleLinkClick}>About</a></li>
         <li><a href="#projects" onClick={handleLinkClick}>Projects</a></li>
         <li><a href="#contact" onClick={handleLinkClick}>Contact</a></li>
+        <li><a href="/home" onClick={handleLinkClick}>Dashboard</a></li>
       </ul>
     </nav>
   );

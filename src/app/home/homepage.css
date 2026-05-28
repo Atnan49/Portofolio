@@ -23,6 +23,39 @@
   animation: fadeUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
+/* ===== TOP NAV / BACK BUTTON ===== */
+.homepage-top-nav {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  margin-bottom: -2rem;
+}
+
+.homepage-back-btn {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.9rem;
+  border-radius: 100px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.25s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.homepage-back-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: translateX(-3px);
+  box-shadow: 0 4px 12px var(--accent-glow), var(--card-shadow);
+}
+
+
 /* ===== TOP SECTION: CLOCK & WEATHER ===== */
 .homepage-header {
   display: flex;
