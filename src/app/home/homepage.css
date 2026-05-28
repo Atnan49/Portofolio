@@ -1,0 +1,437 @@
+/* ===== HOMEPAGE ROOT CONTAINER ===== */
+.homepage-root-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 10;
+}
+
+/* ===== DASHBOARD CONTAINER ===== */
+.homepage-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+  animation: fadeUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* ===== TOP SECTION: CLOCK & WEATHER ===== */
+.homepage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+/* Clock styling */
+.homepage-clock-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.homepage-time {
+  font-family: var(--font-body);
+  font-size: clamp(3.5rem, 8vw, 5.5rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+}
+
+.homepage-time-separator {
+  color: var(--accent);
+  animation: pulseOpacity 2s infinite ease-in-out;
+  padding: 0 0.1rem;
+}
+
+.homepage-date {
+  font-size: 1rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+  font-weight: 400;
+}
+
+.homepage-greeting {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+/* Weather styling */
+.homepage-weather-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 0.75rem 1.25rem;
+  border-radius: 100px;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, border-color 0.3s;
+}
+
+.homepage-weather-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.homepage-weather-icon {
+  font-size: 1.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.homepage-weather-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.homepage-weather-temp {
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.homepage-weather-desc {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ===== SEARCH BAR STYLING ===== */
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--card-shadow);
+  border-radius: 100px;
+  padding: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-bar-container:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow), var(--card-shadow);
+}
+
+.search-bar-select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 0.5rem;
+  border-right: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.search-bar-engine-icon {
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+}
+
+.search-bar-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding-right: 1.25rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.search-bar-select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.search-bar-select-arrow {
+  position: absolute;
+  right: 0.5rem;
+  font-size: 0.6rem;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.search-bar-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  padding: 0.5rem 1.25rem;
+  outline: none;
+  width: 100%;
+}
+
+.search-bar-input::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+.search-bar-button {
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.25s, transform 0.2s;
+}
+
+.search-bar-button:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.search-bar-button:active {
+  transform: scale(0.95);
+}
+
+/* ===== SHORTCUTS STYLING ===== */
+.shortcuts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.shortcuts-group-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.shortcuts-group-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 0.02em;
+  padding-left: 0.25rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.shortcuts-group-title::after {
+  content: '';
+  flex-grow: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--border), transparent);
+}
+
+.shortcuts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 1.25rem;
+}
+
+.shortcut-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.25rem 0.75rem;
+  text-decoration: none;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s, box-shadow 0.3s;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.shortcut-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 10px 25px -10px var(--accent-glow), 0 0 12px 1px var(--accent-glow), var(--card-shadow);
+}
+
+.shortcut-icon-wrapper {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  background: var(--bg);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--border);
+  transition: background-color 0.25s, border-color 0.25s;
+}
+
+.shortcut-card:hover .shortcut-icon-wrapper {
+  background: var(--surface);
+  border-color: var(--accent-glow);
+}
+
+.shortcut-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.shortcut-icon-placeholder {
+  font-size: 1.5rem;
+}
+
+.shortcut-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  max-width: 88px;
+  transition: color 0.25s;
+}
+
+.shortcut-card:hover .shortcut-label {
+  color: var(--accent);
+}
+
+.shortcut-hotkey-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.125rem 0.35rem;
+  border-radius: 6px;
+  opacity: 0.35;
+  transition: opacity 0.25s, background-color 0.25s, color 0.25s;
+}
+
+.shortcut-card:hover .shortcut-hotkey-badge {
+  opacity: 1;
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes pulseOpacity {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== RESPONSIVE MEDIA QUERIES ===== */
+@media (max-width: 640px) {
+  .homepage-root-wrapper {
+    padding: 1.5rem 1rem;
+    justify-content: flex-start;
+  }
+
+  .homepage-container {
+    gap: 2.25rem;
+    margin-top: 1rem;
+  }
+
+  .homepage-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .homepage-time {
+    font-size: 3.5rem;
+  }
+
+  .search-bar-container {
+    padding: 0.35rem;
+  }
+
+  .search-bar-select-wrapper {
+    padding-left: 0.5rem;
+  }
+
+  .search-bar-input {
+    font-size: 0.95rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .shortcuts-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+  }
+
+  .shortcut-card {
+    padding: 0.75rem 0.5rem;
+    border-radius: 12px;
+  }
+
+  .shortcut-icon-wrapper {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 0.5rem;
+  }
+
+  .shortcut-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .shortcut-label {
+    font-size: 0.65rem;
+    max-width: 64px;
+  }
+}
+
+@media (max-width: 400px) {
+  .shortcuts-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
