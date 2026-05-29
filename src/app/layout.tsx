@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Cormorant, Outfit } from 'next/font/google';
 import './globals.css';
 import MouseGlow from '@/components/MouseGlow';
+import ForestBackground from '@/components/ForestBackground';
 
 const cormorant = Cormorant({
   subsets: ['latin'],
@@ -95,6 +96,7 @@ export default function RootLayout({
       </head>
       <body>
         <MouseGlow />
+        <ForestBackground />
         <div className="bg-grid" />
         <div className="bg-lines">
           <div className="bg-line bg-line-1" />
