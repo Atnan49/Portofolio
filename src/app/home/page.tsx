@@ -26,7 +26,7 @@ export default function HomePage() {
       {/* Top Header: Clock, Greetings, Weather */}
       <header className="homepage-header">
         <div className="homepage-clock-wrapper">
-          <span className="homepage-greeting">{greeting}, Atnan</span>
+          <span className="homepage-greeting">{greeting}, <em className="homepage-greeting-name">Atnan</em></span>
           <div className="homepage-time" aria-live="polite">
             <span>{hours}</span>
             <span className="homepage-time-separator">:</span>

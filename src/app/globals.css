@@ -7,42 +7,42 @@
   padding: 0;
 }
 
-/* ===== DESIGN TOKENS (HSL HARMONY) ===== */
+/* ===== DESIGN TOKENS (HSL HARMONY - FOREST EXTRA CLEAN) ===== */
 :root {
-  --bg: hsl(30, 15%, 97%); /* Warm, premium milk-white */
-  --surface: hsl(0, 0%, 100%);
-  --text: hsl(222, 47%, 10%); /* Deep charcoal-navy */
-  --muted: hsl(215, 16%, 42%);
-  --subtle: hsl(214, 15%, 82%);
-  --border: hsl(214, 15%, 88%);
+  --bg: hsl(90, 18%, 95.5%); /* Soft mist/sage ivory */
+  --surface: hsl(90, 14%, 98.5%); /* Clean lily-wood white */
+  --text: hsl(150, 45%, 11%); /* Deep spruce forest green */
+  --muted: hsl(140, 12%, 40%); /* Pine needle mist grey */
+  --subtle: hsl(130, 15%, 83%); /* Lichen grey-green line */
+  --border: hsl(130, 15%, 87%); /* Moss-hint border */
   
-  --accent: hsl(243, 75%, 59%); /* Premium Indigo */
-  --accent-light: hsl(243, 75%, 95%);
-  --accent-glow: rgba(99, 102, 241, 0.08);
+  --accent: hsl(142, 54%, 28%); /* Forest Moss/Emerald Green */
+  --accent-light: hsl(142, 45%, 93%);
+  --accent-glow: rgba(34, 139, 34, 0.05);
   
-  --nav-bg: rgba(248, 247, 244, 0.82);
-  --nav-mobile-bg: rgba(248, 247, 244, 0.96);
-  --card-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
+  --nav-bg: rgba(243, 245, 240, 0.85); /* Semi-transparent forest mist */
+  --nav-mobile-bg: rgba(243, 245, 240, 0.96);
+  --card-shadow: 0 10px 30px -15px rgba(20, 35, 20, 0.05), 0 1px 3px rgba(20, 35, 20, 0.02);
   
   --font-display: var(--font-display), Georgia, serif;
   --font-body: var(--font-body), sans-serif;
 }
 
 .dark {
-  --bg: hsl(222, 47%, 4%); /* Sleek deep-space slate */
-  --surface: hsl(222, 47%, 7%);
-  --text: hsl(210, 40%, 98%);
-  --muted: hsl(215, 20%, 65%);
-  --subtle: hsl(217, 18%, 24%);
-  --border: hsl(217, 18%, 13%);
+  --bg: hsl(145, 25%, 5.5%); /* Deep nighttime forest obsidian */
+  --surface: hsl(145, 20%, 8.5%); /* Forest canopy shadow */
+  --text: hsl(120, 15%, 96%); /* Crisp pine needle white */
+  --muted: hsl(135, 10%, 65%); /* Mist green-gray */
+  --subtle: hsl(140, 15%, 18%);
+  --border: hsl(140, 12%, 13%);
   
-  --accent: hsl(243, 85%, 68%); /* Electric Indigo Glow */
-  --accent-light: rgba(99, 102, 241, 0.1);
-  --accent-glow: rgba(99, 102, 241, 0.22);
+  --accent: hsl(142, 70%, 46%); /* Vibrant Forest Emerald Glow */
+  --accent-light: rgba(16, 185, 129, 0.09);
+  --accent-glow: rgba(16, 185, 129, 0.16);
   
-  --nav-bg: rgba(11, 15, 25, 0.82);
-  --nav-mobile-bg: rgba(11, 15, 25, 0.96);
-  --card-shadow: 0 20px 45px -20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --nav-bg: rgba(10, 18, 13, 0.85);
+  --nav-mobile-bg: rgba(10, 18, 13, 0.97);
+  --card-shadow: 0 20px 45px -20px rgba(0, 5, 2, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 html {
@@ -62,6 +62,22 @@ body {
   transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
 
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--subtle);
+  border-radius: 5px;
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
 /* ===== BACKGROUND ANIMATIONS & MOUSE GLOW ===== */
 .bg-grid {
   position: fixed;
@@ -72,14 +88,14 @@ body {
   pointer-events: none;
   z-index: -2;
   background-image: 
-    radial-gradient(rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+    radial-gradient(rgba(16, 185, 129, 0.03) 1px, transparent 1px);
   background-size: 32px 32px;
   opacity: 0.85;
 }
 
 .dark .bg-grid {
   background-image: 
-    radial-gradient(rgba(99, 102, 241, 0.02) 1px, transparent 1px);
+    radial-gradient(rgba(16, 185, 129, 0.015) 1px, transparent 1px);
 }
 
 .bg-lines {
@@ -98,14 +114,14 @@ body {
 .bg-line {
   width: 1px;
   height: 100%;
-  background: rgba(20, 20, 20, 0.03);
+  background: rgba(20, 35, 20, 0.03);
   position: relative;
   overflow: hidden;
   transition: background-color 0.4s ease;
 }
 
 .dark .bg-line {
-  background: rgba(248, 247, 244, 0.03);
+  background: rgba(248, 247, 244, 0.02);
 }
 
 .bg-line::after {
@@ -156,15 +172,16 @@ body {
   opacity: 0.85;
 }
 
+/* Warm sunlight filtering through canopy (Komorebi glow) */
 .blob-2 {
   width: 350px;
   height: 350px;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, transparent 70%);
-  opacity: 0.7;
+  background: radial-gradient(circle, rgba(234, 179, 8, 0.04) 0%, transparent 70%);
+  opacity: 0.75;
 }
 
 .dark .blob-2 {
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(234, 179, 8, 0.1) 0%, transparent 70%);
 }
 
 /* ===== NAV ===== */
@@ -347,7 +364,7 @@ section {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(99, 102, 241, 0.1),
+    var(--accent-light),
     transparent
   );
   animation: shine 5s infinite linear;
@@ -459,7 +476,7 @@ section {
   border-color: var(--accent);
   color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 8px 25px color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
 .btn-ghost {
@@ -780,7 +797,7 @@ section {
 .project-card:hover .mockup-browser {
   transform: scale(1.03) rotate(1deg);
   border-color: var(--accent);
-  box-shadow: 0 12px 35px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 12px 35px color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
 .mockup-header {
@@ -907,7 +924,7 @@ section {
   background: var(--accent);
   color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 /* ===== FOOTER ===== */
