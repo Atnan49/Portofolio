@@ -91,10 +91,12 @@ export default function ShortcutGrid() {
         {renderGroup(generalShortcuts, true)}
       </section>
 
-      <section className="shortcuts-group-section">
-        <h2 className="shortcuts-group-title">Dev & Freelance</h2>
-        {renderGroup(devShortcuts, false)}
-      </section>
+      {devShortcuts.length > 0 && (
+        <section className="shortcuts-group-section">
+          <h2 className="shortcuts-group-title">Dev & Freelance</h2>
+          {renderGroup(devShortcuts, false)}
+        </section>
+      )}
     </div>
   );
 }

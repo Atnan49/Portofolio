@@ -37,16 +37,6 @@ export const SHORTCUTS: Shortcut[] = [
   { label: 'Netlify', url: 'https://netlify.com', group: 'General' },
   { label: 'Railway', url: 'https://railway.app', group: 'General' },
 
-  // Group "Dev & Freelance"
-  { label: 'Freelancer.com', url: 'https://freelancer.com', group: 'Dev & Freelance' },
-  { label: 'Google Search Console', url: 'https://search.google.com/search-console', group: 'Dev & Freelance' },
-  { label: 'Tarifter', url: 'https://tarifter.com', group: 'Dev & Freelance' },
-  { label: 'Laravel Docs', url: 'https://laravel.com/docs/11.x', group: 'Dev & Freelance' },
-  { label: 'Tailwind Docs', url: 'https://tailwindcss.com/docs', group: 'Dev & Freelance' },
-  { label: 'ChatGPT', url: 'https://chatgpt.com', group: 'Dev & Freelance' },
-  { label: 'Claude', url: 'https://claude.ai', group: 'Dev & Freelance' },
-  { label: 'Gemini', url: 'https://gemini.google.com', group: 'Dev & Freelance' },
-  { label: 'Antigravity', url: 'https://deepmind.google', group: 'Dev & Freelance' }
 ];
 
 export const WEATHER_CONFIG: WeatherConfig = {
