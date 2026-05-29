@@ -23,43 +23,61 @@ export default function HomePage() {
         </a>
       </div>
 
-      {/* Top Header: Clock, Greetings, Weather */}
-      <header className="homepage-header">
-        <div className="homepage-clock-wrapper">
-          <span className="homepage-greeting">{greeting}, <em className="homepage-greeting-name">Atnan</em></span>
-          <div className="homepage-time" aria-live="polite">
-            <span>{hours}</span>
-            <span className="homepage-time-separator">:</span>
-            <span>{minutes}</span>
-            <span className="homepage-time-separator" style={{ fontSize: '0.8em', verticalAlign: 'middle' }}>:</span>
-            <span style={{ fontSize: '0.65em', opacity: 0.85, fontWeight: 400, marginLeft: '0.1rem' }}>{seconds}</span>
+      <div className="homepage-dashboard-grid">
+        {/* Left Console: Clock, Greeting & Weather */}
+        <aside className="homepage-left-console">
+          <div className="homepage-console-card">
+            <div className="homepage-greeting-wrapper">
+              <span className="homepage-greeting">{greeting}, <em className="homepage-greeting-name">Atnan</em></span>
+            </div>
+            
+            <div className="homepage-time-display" aria-live="polite">
+              <div className="homepage-time-main">
+                <span>{hours}</span>
+                <span className="homepage-time-separator">:</span>
+                <span>{minutes}</span>
+              </div>
+              <div className="homepage-time-sub">
+                <span className="homepage-time-seconds-colon">:</span>
+                <span className="homepage-time-seconds">{seconds}</span>
+              </div>
+            </div>
+
+            <div className="homepage-date-badge">{dateString}</div>
+            
+            {/* Weather Widget */}
+            <div className="homepage-weather-widget">
+              <div className="homepage-weather-header">
+                <span className="homepage-location">Malang, ID</span>
+                <span className="homepage-weather-icon" role="img" aria-label={weather.condition}>
+                  {weather.icon}
+                </span>
+              </div>
+              <div className="homepage-weather-body">
+                <span className="homepage-weather-temp">
+                  {weather.loading ? '...' : weather.temp !== null ? `${weather.temp}°C` : '—'}
+                </span>
+                <span className="homepage-weather-desc">
+                  {weather.loading ? 'Memuat...' : weather.condition}
+                </span>
+              </div>
+            </div>
           </div>
-          <span className="homepage-date">{dateString}</span>
-        </div>
+        </aside>
 
-        {/* Weather Info */}
-        <div className="homepage-weather-card">
-          <span className="homepage-weather-icon" role="img" aria-label={weather.condition}>
-            {weather.icon}
-          </span>
-          <div className="homepage-weather-info">
-            <span className="homepage-weather-temp">
-              {weather.loading ? '...' : weather.temp !== null ? `${weather.temp}°C` : '—'}
-            </span>
-            <span className="homepage-weather-desc">
-              {weather.loading ? 'Memuat...' : weather.condition}
-            </span>
-          </div>
-        </div>
-      </header>
+        {/* Right Area: Search & Shortcuts */}
+        <main className="homepage-main-content">
+          {/* Search Console */}
+          <section className="homepage-search-section">
+            <SearchBar />
+          </section>
 
-      {/* Search Section */}
-      <main className="homepage-search-section">
-        <SearchBar />
-      </main>
-
-      {/* Shortcuts Section */}
-      <ShortcutGrid />
+          {/* Shortcuts Grid */}
+          <section className="homepage-shortcuts-section">
+            <ShortcutGrid />
+          </section>
+        </main>
+      </div>
     </div>
   );
 }
