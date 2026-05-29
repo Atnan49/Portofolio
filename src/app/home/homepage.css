@@ -90,6 +90,24 @@
   box-shadow: 0 20px 40px -15px color-mix(in srgb, var(--accent) 6%, transparent), var(--card-shadow);
 }
 
+.homepage-brand-logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.homepage-brand-logo {
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1.5px solid var(--border);
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.homepage-brand-logo:hover {
+  transform: rotate(5deg) scale(1.05);
+}
+
 .homepage-greeting-wrapper {
   margin-bottom: 0.25rem;
 }

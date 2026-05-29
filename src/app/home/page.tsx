@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { useClock } from '@/hooks/useClock';
 import { useWeather } from '@/hooks/useWeather';
 import SearchBar from '@/components/homepage/SearchBar';
@@ -27,6 +28,10 @@ export default function HomePage() {
         {/* Left Console: Clock, Greeting & Weather */}
         <aside className="homepage-left-console">
           <div className="homepage-console-card">
+            <div className="homepage-brand-logo-wrapper">
+              <Image src="/icon.svg" alt="Brand Logo" width={38} height={38} className="homepage-brand-logo" priority />
+            </div>
+            
             <div className="homepage-greeting-wrapper">
               <span className="homepage-greeting">{greeting}, <em className="homepage-greeting-name">Atnan</em></span>
             </div>
