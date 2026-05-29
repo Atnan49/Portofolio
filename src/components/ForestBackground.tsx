@@ -64,6 +64,21 @@ export default function ForestBackground() {
         <div className="sunbeam sunbeam-3" />
       </div>
 
+      {/* Floating Background Logo */}
+      <div className="forest-bg-logo-wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="forest-bg-logo">
+          <defs>
+            <filter id="bg-glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="1.2" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+          <rect width="32" height="32" rx="8" fill="currentColor" fillOpacity="0.05" />
+          <text x="46%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-weight="500" font-size="18" fill="currentColor">A</text>
+          <circle cx="23" cy="22" r="2.2" fill="var(--accent)" filter="url(#bg-glow)" />
+        </svg>
+      </div>
+
       {/* Fireflies */}
       <div className="fireflies">
         {fireflies.map((ff) => (

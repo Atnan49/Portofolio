@@ -1195,3 +1195,36 @@ section {
     transform: rotate(360deg) rotateY(180deg) rotateX(360deg);
   }
 }
+
+/* Floating Ambient Background Watermark Logo */
+.forest-bg-logo-wrapper {
+  position: absolute;
+  bottom: -60px;
+  right: -60px;
+  width: min(560px, 50vw);
+  height: min(560px, 50vw);
+  color: var(--text);
+  opacity: 0.02;
+  pointer-events: none;
+  z-index: -1;
+  animation: logoFloat 24s infinite ease-in-out;
+}
+
+.dark .forest-bg-logo-wrapper {
+  opacity: 0.045;
+}
+
+.forest-bg-logo {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 80px var(--accent-glow));
+}
+
+@keyframes logoFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(10deg) scale(1);
+  }
+  50% {
+    transform: translateY(-25px) rotate(14deg) scale(1.02);
+  }
+}
