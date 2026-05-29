@@ -23,14 +23,7 @@ export const SEARCH_ENGINES: SearchEngine[] = [
   { id: 'youtube', name: 'YouTube', prefix: 'yt', url: 'https://youtube.com/results?search_query=', icon: '🎥' },
   { id: 'github', name: 'GitHub', prefix: 'gh', url: 'https://github.com/search?q=', icon: '💻' },
   { id: 'chatgpt', name: 'ChatGPT', prefix: 'ai', url: 'https://chatgpt.com/?q=', icon: '🤖' },
-  { id: 'claude', name: 'Claude', prefix: 'cl', url: 'https://claude.ai/new?q=', icon: '✉️' },
-  { id: 'gemini', name: 'Gemini', prefix: 'gem', url: 'https://gemini.google.com/app?q=', icon: '✨' },
-  { id: 'shopee', name: 'Shopee', prefix: 'sp', url: 'https://shopee.co.id/search?keyword=', icon: '🛍️' },
-  { id: 'tokopedia', name: 'Tokopedia', prefix: 'tk', url: 'https://www.tokopedia.com/search?st=product&q=', icon: '🟢' },
-  { id: 'npm', name: 'npm', prefix: 'npm', url: 'https://www.npmjs.com/search?q=', icon: '📦' },
-  { id: 'packagist', name: 'Packagist', prefix: 'pkg', url: 'https://packagist.org/?query=', icon: '🐘' },
-  { id: 'mdn', name: 'MDN', prefix: 'mdn', url: 'https://developer.mozilla.org/en-US/search?q=', icon: '📖' },
-  { id: 'laravel', name: 'Laravel', prefix: 'lv', url: 'https://laravel.com/docs/11.x?search=', icon: '🔥' }
+  { id: 'claude', name: 'Claude', prefix: 'cl', url: 'https://claude.ai/new?q=', icon: '✉️' }
 ];
 
 export const SHORTCUTS: Shortcut[] = [
