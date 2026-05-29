@@ -2,7 +2,7 @@
 
 Welcome to the repository of my personal portfolio website! This project is built using **Next.js 16**, **TypeScript**, and **Vanilla CSS** to present a clean, fast, and minimalist showcase of my selected work, tech stack, and experience.
 
-🌐 **Live Website:** [https://project-6ivrc.vercel.app](https://project-6ivrc.vercel.app)
+🌐 **Live Website:** [Atnan](https://www.atnan.my.id/)
 
 ---
 
