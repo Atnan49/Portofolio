@@ -6,7 +6,9 @@ import { SEARCH_ENGINES } from '@/config/homepage.config';
 export default function SearchBar() {
   const [selectedEngineId, setSelectedEngineId] = useState<string>('google');
   const [query, setQuery] = useState<string>('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Focus input on mount
   useEffect(() => {
@@ -32,6 +34,17 @@ export default function SearchBar() {
 
     window.addEventListener('keydown', handleGlobalKeyDown);
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
+
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,20 +81,47 @@ export default function SearchBar() {
 
   return (
     <div className="search-bar-container">
-      <div className="search-bar-select-wrapper">
-        <span className="search-bar-engine-icon">{selectedEngine.icon}</span>
-        <select
-          value={selectedEngineId}
-          onChange={(e) => setSelectedEngineId(e.target.value)}
-          className="search-bar-select"
+      <div ref={dropdownRef} className="search-bar-dropdown-container">
+        <div
+          className="search-bar-dropdown-trigger"
+          onClick={() => setIsOpen(!isOpen)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setIsOpen(!isOpen);
+            } else if (e.key === 'Escape') {
+              setIsOpen(false);
+            }
+          }}
         >
-          {SEARCH_ENGINES.map((engine) => (
-            <option key={engine.id} value={engine.id}>
-              {engine.name} ({engine.prefix})
-            </option>
-          ))}
-        </select>
-        <span className="search-bar-select-arrow" aria-hidden="true">▼</span>
+          <span className="search-bar-engine-icon">{selectedEngine.icon}</span>
+          <span className="search-bar-selected-name">{selectedEngine.name}</span>
+          <span className={`search-bar-select-arrow ${isOpen ? 'open' : ''}`} aria-hidden="true">▼</span>
+        </div>
+
+        {isOpen && (
+          <div className="search-bar-dropdown-menu" role="listbox">
+            {SEARCH_ENGINES.map((engine) => (
+              <div
+                key={engine.id}
+                onClick={() => {
+                  setSelectedEngineId(engine.id);
+                  setIsOpen(false);
+                  inputRef.current?.focus();
+                }}
+                className={`search-bar-dropdown-item ${engine.id === selectedEngineId ? 'active' : ''}`}
+                role="option"
+                aria-selected={engine.id === selectedEngineId}
+              >
+                <span className="search-bar-dropdown-icon">{engine.icon}</span>
+                <span className="search-bar-dropdown-label">{engine.name}</span>
+                <span className="search-bar-dropdown-prefix">{engine.prefix}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <input
