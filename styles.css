@@ -1346,7 +1346,7 @@ footer {
     background-image: 
       linear-gradient(to right, rgba(13, 13, 13, 0.94) 0%, rgba(13, 13, 13, 0.82) 60%, rgba(13, 13, 13, 0.5) 100%),
       linear-gradient(to top, rgba(13, 13, 13, 1) 0%, rgba(13, 13, 13, 0.8) 25%, transparent 50%),
-      url('hero-bg.webp');
+      url('hero-bg-mobile.webp');
     background-position: 80% center;
   }
 
