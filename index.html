@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Primary SEO Meta Tags -->
+  <title>Atnan | Senior Full-Stack & Progressive Web App (PWA) Developer</title>
+  <meta name="title" content="Atnan | Senior Full-Stack & Progressive Web App (PWA) Developer" />
+  <meta name="description" content="Portofolio Resmi Atnan — Senior Web Developer spesialis Progressive Web Applications (PWA), platform edukasi digital interaktif, dan aplikasi web full-stack berkinerja tinggi." />
+  <meta name="keywords" content="Atnan, Atnan Web Developer, Full-Stack Developer, PWA Developer, Progressive Web Applications, Web Developer Indonesia, React, JavaScript, Node.js, Portofolio Developer" />
+  <meta name="author" content="Atnan" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <link rel="canonical" href="https://atnan.my.id/" />
+  
+  <!-- Google Search Console Verification Meta Tag (Paste your code from GSC) -->
+  <!-- <meta name="google-site-verification" content="PASTE_YOUR_CODE_HERE" /> -->
+
+  <meta name="theme-color" content="#0d0d0d" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <!-- Open Graph / Social Media Preview (Instagram DM, WhatsApp, Facebook, LinkedIn, iMessage) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://atnan.my.id/" />
+  <meta property="og:site_name" content="Atnan Developer Portfolio" />
+  <meta property="og:title" content="Atnan | Senior Full-Stack & Progressive Web App (PWA) Developer" />
+  <meta property="og:description" content="Spesialis pengembang aplikasi web interaktif berkinerja tinggi, platform edukasi digital, dan sistem PWA modern rilis di cloud." />
+  <meta property="og:image" content="og-image.png" />
+  <meta property="og:image:secure_url" content="og-image.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Atnan - Senior Full-Stack & PWA Developer Portfolio Banner" />
+  <meta property="og:locale" content="id_ID" />
+  <meta property="og:locale:alternate" content="en_US" />
+
+  <!-- Twitter Card Preview -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@Atnan49" />
+  <meta name="twitter:creator" content="@Atnan49" />
+  <meta name="twitter:title" content="Atnan | Senior Full-Stack & Progressive Web App (PWA) Developer" />
+  <meta name="twitter:description" content="Spesialis pengembang aplikasi web interaktif berkinerja tinggi, platform edukasi digital, dan sistem PWA modern rilis di cloud." />
+  <meta name="twitter:image" content="og-image.png" />
+
+  <!-- Favicon Link (SVG Vector AT Logo) -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+
+  <!-- Structured Data JSON-LD (Schema.org for Google Search & Knowledge Graph) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Atnan",
+    "jobTitle": "Senior Full-Stack & PWA Developer",
+    "description": "Developer Web Full-Stack spesialis Progressive Web Applications (PWA), platform edukasi digital interaktif, dan sistem web modern.",
+    "url": "https://atnan.my.id/",
+    "image": "og-image.png",
+    "sameAs": [
+      "https://github.com/Atnan49",
+      "https://www.instagram.com/atnan_79/"
+    ],
+    "knowsAbout": [
+      "Progressive Web Apps (PWA)",
+      "Full-Stack Web Development",
+      "JavaScript",
+      "HTML5 & CSS3",
+      "Service Workers",
+      "Offline-First Web Apps",
+      "Cloud Deployment (Vercel, Render)"
+    ]
+  }
+  </script>
+
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Ultra-Elegant Cinematic Split-Curtain Preloader -->
+  <div class="preloader-wrapper" id="preloaderWrapper">
+    <div class="preloader-curtain preloader-curtain-top"></div>
+    <div class="preloader-curtain preloader-curtain-bottom"></div>
+    
+    <div class="preloader-content-center">
+      <div class="preloader-brand-title">ATNAN</div>
+      <div class="preloader-subtext" data-i18n="preloaderSubtext">侍 • FULL-STACK & PWA DEVELOPER</div>
+      
+      <button class="preloader-start-btn" id="preloaderStartBtn">
+        <span data-i18n="preloaderBtn">[ 侍 ] KLIK UNTUK MASUK</span>
+      </button>
+
+      <div class="preloader-line-track">
+        <div class="preloader-line-fill" id="preloaderFill"></div>
+      </div>
+      <div class="preloader-percent" id="preloaderCounter">00%</div>
+    </div>
+  </div>
+
+  <!-- Fixed Hero Parallax Backdrop -->
+  <div class="hero-fixed-backdrop"></div>
+
+  <!-- Background Interactive Ink Canvas -->
+  <canvas id="inkCanvas" class="hero-bg-canvas"></canvas>
+
+  <!-- Toast Floating Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Header Navigation -->
+  <header id="mainHeader">
+    <div class="header-container">
+      <!-- LEFT: Logo Brand -->
+      <a href="#home" class="logo-brand">
+        <span class="logo-box">AT</span> ATNAN
+      </a>
+
+      <!-- CENTER: Navigation Links -->
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home" class="nav-link active" data-section="home" data-i18n="navHome">Beranda</a></li>
+        <li><a href="#works" class="nav-link" data-section="works" data-i18n="navWorks">Proyek</a></li>
+        <li><a href="#skills" class="nav-link" data-section="skills" data-i18n="navSkills">Keahlian</a></li>
+        <li><a href="#about" class="nav-link" data-section="about" data-i18n="navAbout">Tentang</a></li>
+        <li><a href="#contact" class="nav-link" data-section="contact" data-i18n="navContact">Kontak</a></li>
+      </ul>
+
+      <!-- RIGHT: Utility Controls Group -->
+      <div class="header-right-group">
+        <!-- Status Capsule Pill -->
+        <div class="header-status hidden-mobile">
+          <span class="status-dot"></span>
+          <span data-i18n="statusText">Terbuka Untuk Proyek</span>
+        </div>
+
+        <!-- Integrated Unified Controls Capsule (Lang & Sound) -->
+        <div class="header-controls-bar">
+          <button id="langToggleBtn" class="lang-btn" aria-label="Ganti Bahasa / Switch Language" title="Ganti Bahasa / Switch Language">
+            <span class="lang-code active" id="langID">ID</span>
+            <span class="lang-divider">/</span>
+            <span class="lang-code" id="langEN">EN</span>
+          </button>
+
+          <div class="controls-divider"></div>
+
+          <button id="soundToggleBtn" class="sound-btn" aria-label="Toggle Sound Effects" title="Aktifkan / Bisukan Suara Web (Web Audio SFX)">
+            <span class="material-symbols-outlined" id="soundIcon" style="font-size: 16px;">volume_up</span>
+          </button>
+        </div>
+
+        <!-- Mobile Drawer Toggle Button -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Navigation Menu">
+          <span class="material-symbols-outlined" id="menuIcon">menu</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero-section" id="home">
+      <div class="container">
+        <div class="hero-content">
+          <div>
+            <span class="section-tag" data-i18n="heroTag">// Developer Web Full-Stack • Atnan</span>
+            <h1 class="hero-title">
+              ATNAN
+            </h1>
+            <p class="hero-subtitle" data-i18n="heroSubtitle">
+              Spesialis pengembang aplikasi web interaktif berkinerja tinggi, platform digital edukasi, dan sistem web modern yang rilis di Vercel, Render, dan Custom Domain.
+            </p>
+            
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+              <a href="#works" class="btn-blade">
+                <span><span data-i18n="btnViewWorks">Lihat Proyek Unggulan</span> <span class="material-symbols-outlined">terminal</span></span>
+              </a>
+              <a href="https://github.com/Atnan49" target="_blank" rel="noopener noreferrer" class="btn-blade" style="border-color: var(--outline-variant); color: var(--on-surface-variant);">
+                <span>GitHub Profile <span class="material-symbols-outlined">open_in_new</span></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED PROJECTS SECTION -->
+    <section class="section" id="works">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <span class="section-tag" data-i18n="worksTag">// Portofolio Karya Terbaru</span>
+            <h2 class="section-title" data-i18n="worksTitle">Proyek<br />Unggulan Pilihan.</h2>
+          </div>
+
+          <!-- Filter Buttons -->
+          <div class="filter-tabs" id="filterTabs">
+            <button class="filter-btn active" data-filter="all" data-i18n="filterAll">Semua Proyek</button>
+            <button class="filter-btn" data-filter="edu" data-i18n="filterUDL">Edukasi Digital</button>
+            <button class="filter-btn" data-filter="event" data-i18n="filterEvent">Sistem Event</button>
+          </div>
+        </div>
+
+        <!-- Bento Grid Showcase (3 Curated Production Projects) -->
+        <div class="bento-grid" id="projectsGrid">
+          
+          <!-- Project 1 (Full Width - PARTI Platform) -->
+          <div class="bento-card col-12" data-category="event" data-id="parti-mini">
+            <div class="bento-info">
+              <span class="bento-tag" id="tag-parti">Live di Render • PWA • Platform Event</span>
+              <h3 class="bento-title" id="title-parti">PARTI Himatif UMS Platform</h3>
+              <p class="bento-desc" id="desc-parti">Platform web PWA resmi event tahunan terbesar HIMATIF UMS memuat sistem pendaftaran lomba web programming, webinar nasional, futsal, bakti sosial, dan portal sponsorship.</p>
+              
+              <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
+                <span class="btn-blade-sm">
+                  <span>Detail Studi Kasus <span class="material-symbols-outlined">arrow_forward</span></span>
+                </span>
+                <a href="https://parti-mini-version.onrender.com/" target="_blank" rel="noopener noreferrer" class="btn-blade-sm" onclick="event.stopPropagation();" style="border-color: var(--outline-variant); color: var(--on-surface-variant);">
+                  <span>Kunjungi Live Site <span class="material-symbols-outlined">open_in_new</span></span>
+                </a>
+              </div>
+            </div>
+
+            <div class="bento-device-container">
+              <div class="bento-device-frame">
+                <img src="project-parti.webp" alt="PARTI Himatif UMS PWA UI" class="bento-device-img" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 2 (Full Width Reverse - Ebook Fikih) -->
+          <div class="bento-card col-12 bento-card-reverse" data-category="edu" data-id="ebook-fikih">
+            <div class="bento-info">
+              <span class="bento-tag" id="tag-ebook">fiqihdigital.my.id • PWA Offline • Kolaborasi Seraphic.Std</span>
+              <h3 class="bento-title" id="title-ebook">Smart E-Book Fikih Digital</h3>
+              <p class="bento-desc" id="desc-ebook">Media pembelajaran Fikih PWA interaktif Kelas 2 SD (UNIDA Gontor) hasil kolaborasi bersama Seraphic.Std dengan audio salat, kuis, PWA Offline, & font adaptif.</p>
+              
+              <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
+                <span class="btn-blade-sm">
+                  <span>Detail Studi Kasus <span class="material-symbols-outlined">arrow_forward</span></span>
+                </span>
+                <a href="https://www.fiqihdigital.my.id/" target="_blank" rel="noopener noreferrer" class="btn-blade-sm" onclick="event.stopPropagation();" style="border-color: var(--outline-variant); color: var(--on-surface-variant);">
+                  <span>Kunjungi Live Site <span class="material-symbols-outlined">open_in_new</span></span>
+                </a>
+              </div>
+            </div>
+
+            <div class="bento-device-container">
+              <div class="bento-device-frame">
+                <img src="project-fikih.webp" alt="Smart E-Book Fikih PWA UI" class="bento-device-img" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 3 (Full Width - Qomar App) -->
+          <div class="bento-card col-12" data-category="edu" data-id="qomar-app">
+            <div class="bento-info">
+              <span class="bento-tag" id="tag-qomar">qomar-mi.vercel.app • PWA Offline • Kolaborasi Seraphic.Std</span>
+              <h3 class="bento-title" id="title-qomar">QOMAR — Komik Digital Bahasa Arab</h3>
+              <p class="bento-desc" id="desc-qomar">Qira'atu-l-Komik Lughatul Arabiyah — Platform PWA pembelajaran Bahasa Arab berbasis komik digital interaktif Kelas IV MI hasil kolaborasi bersama Seraphic.Std.</p>
+              
+              <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
+                <span class="btn-blade-sm">
+                  <span>Detail Studi Kasus <span class="material-symbols-outlined">arrow_forward</span></span>
+                </span>
+                <a href="https://qomar-mi.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-blade-sm" onclick="event.stopPropagation();" style="border-color: var(--outline-variant); color: var(--on-surface-variant);">
+                  <span>Kunjungi Live Site <span class="material-symbols-outlined">open_in_new</span></span>
+                </a>
+              </div>
+            </div>
+
+            <div class="bento-device-container">
+              <div class="bento-device-frame">
+                <img src="project-qomar.webp" alt="QOMAR Arabic PWA Comic UI" class="bento-device-img" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- TECHNICAL SKILLS SECTION -->
+    <section class="section" id="skills" style="background: var(--surface-low); border-top: 1px solid var(--outline-variant); border-bottom: 1px solid var(--outline-variant);">
+      <div class="container">
+        <div class="section-header" style="border-bottom: none; margin-bottom: 36px;">
+          <div>
+            <span class="section-tag" data-i18n="skillsTag">// Keahlian Teknis</span>
+            <h2 class="section-title" data-i18n="skillsTitle">PWA & Arsitektur<br />Cloud Web.</h2>
+          </div>
+        </div>
+
+        <div class="skills-grid">
+          
+          <div class="skill-card">
+            <span class="text-label-sm" style="color: var(--crimson-light);">01 / PWA & Offline Sync</span>
+            <h3 style="font-size: 20px; margin: 12px 0 16px 0;" data-i18n="skillTitle1">Inti Progressive Web App</h3>
+            <ul style="list-style: none; color: var(--on-surface-variant); font-size: 14px; line-height: 2;">
+              <li>• Progressive Web Apps (PWA) Architecture</li>
+              <li>• Service Workers & Cache Storage API</li>
+              <li>• Offline-First Installable Web Apps</li>
+              <li>• Web App Manifest & Theme Config</li>
+              <li>• Lazy Loading & Media Caching</li>
+            </ul>
+          </div>
+
+          <div class="skill-card">
+            <span class="text-label-sm" style="color: var(--crimson-light);">02 / Frontend & UI</span>
+            <h3 style="font-size: 20px; margin: 12px 0 16px 0;" data-i18n="skillTitle2">UI Interaktif & Aksesibilitas</h3>
+            <ul style="list-style: none; color: var(--on-surface-variant); font-size: 14px; line-height: 2;">
+              <li>• HTML5 / CSS3 / JavaScript (ES6+)</li>
+              <li>• Desain UI/UX Inklusif & Aksesibel</li>
+              <li>• Mode Disleksia & Scaling Font Adaptif</li>
+              <li>• Audio Web API & Kuis Interaktif</li>
+              <li>• Interface Mobile-First Responsif</li>
+            </ul>
+          </div>
+
+          <div class="skill-card">
+            <span class="text-label-sm" style="color: var(--crimson-light);">03 / Workflow & Cloud</span>
+            <h3 style="font-size: 20px; margin: 12px 0 16px 0;" data-i18n="skillTitle3">Deployment & Tools</h3>
+            <ul style="list-style: none; color: var(--on-surface-variant); font-size: 14px; line-height: 2;">
+              <li>• Vercel & Render Cloud Deployments</li>
+              <li>• Custom Domain & SSL Management</li>
+              <li>• Git / GitHub (`@Atnan49`)</li>
+              <li>• Structured Data (JSON-LD) & SEO</li>
+              <li>• Kode Bersih & Arsitektur Modular</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- PHILOSOPHY / ABOUT SECTION -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="philosophy-grid">
+          
+          <!-- Visual Anchor -->
+          <div class="philosophy-card">
+            <img src="about-bg.webp" alt="Development Canvas" class="philosophy-bg-img" />
+            <div class="bento-overlay"></div>
+            <div style="position: relative; z-index: 2;">
+              <span class="section-tag" style="color: var(--crimson-light);" data-i18n="aboutTag">// Tentang Atnan</span>
+              <h3 class="bento-title" style="font-size: 28px;" data-i18n="aboutCardTitle">Mengembangkan Kode PWA Berdampak</h3>
+              <p class="bento-desc" data-i18n="aboutCardDesc">Membangun Progressive Web Apps live—dari aplikasi e-learning interaktif hingga sistem event kampus.</p>
+            </div>
+          </div>
+
+          <!-- Development Philosophy -->
+          <div>
+            <span class="section-tag" data-i18n="ethosTag">// Etos Rekayasa Web</span>
+            <h2 class="section-title" style="margin-bottom: 24px;" data-i18n="ethosTitle">Kedisiplinan Dalam<br /><span style="color: var(--crimson-light); font-style: italic;">Setiap Baris Kode.</span></h2>
+            <p style="color: var(--on-surface-variant); font-size: 17px;" data-i18n="ethosText">
+              Saya Atnan, seorang Developer Web Full-Stack yang berspesialisasi dalam membangun Progressive Web Applications (PWA) berkinerja tinggi. Fokus saya adalah menciptakan pengalaman digital yang dapat berjalan offline, dapat diinstall di HP/desktop, dan didukung UI responsif serta arsitektur cloud yang tangguh.
+            </p>
+
+            <!-- 4 Tenets -->
+            <div class="tenets-grid">
+              <div class="tenet-item">
+                <div class="tenet-num">01</div>
+                <h4 class="tenet-title" data-i18n="tenetTitle1">PWA & Offline First</h4>
+                <p class="tenet-text" data-i18n="tenetText1">Memungkinkan pengguna mengakses platform web interaktif di mana saja tanpa koneksi internet aktif.</p>
+              </div>
+
+              <div class="tenet-item">
+                <div class="tenet-num">02</div>
+                <h4 class="tenet-title" data-i18n="tenetTitle2">Interface Responsif & Aksesibel</h4>
+                <p class="tenet-text" data-i18n="tenetText2">Merancang pengalaman web yang adaptif untuk berbagai ukuran layar dan perangkat, cepat, dan mudah digunakan.</p>
+              </div>
+
+              <div class="tenet-item">
+                <div class="tenet-num">03</div>
+                <h4 class="tenet-title" data-i18n="tenetTitle3">Rilis Produksi Live</h4>
+                <p class="tenet-text" data-i18n="tenetText3">Semua sistem rilis aktif, aman, dan dihosting di infrastruktur cloud (Vercel, Render, Custom Domain).</p>
+              </div>
+
+              <div class="tenet-item">
+                <div class="tenet-num">04</div>
+                <h4 class="tenet-title" data-i18n="tenetTitle4">Rekayasa Kode Bersih</h4>
+                <p class="tenet-text" data-i18n="tenetText4">Menjaga standar basis kode bersih, performa SEO optimal, dan interface yang responsif.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="contact-grid">
+          
+          <!-- Contact Info -->
+          <div class="contact-info-block">
+            <div>
+              <span class="section-tag" data-i18n="contactTag">// Hubungi Saya</span>
+              <h2 class="section-title" style="margin-bottom: 24px;" data-i18n="contactTitle">Mari Berkolaborasi<br />Untuk Proyek PWA Anda.</h2>
+              <p style="color: var(--on-surface-variant); font-size: 16px; max-width: 420px;" data-i18n="contactSubtitle">
+                Punya ide proyek, kebutuhan Progressive Web Application, atau platform edukasi? Hubungi saya langsung via email atau jelajahi media sosial saya.
+              </p>
+            </div>
+
+            <div style="margin-top: 40px;">
+              <span class="text-label-sm" style="color: var(--outline);" data-i18n="channelsLabel">Saluran Komunikasi Langsung</span>
+              <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 16px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <a href="mailto:atnanseptian1@gmail.com" class="contact-link" style="margin-top: 0;">
+                    atnanseptian1@gmail.com
+                  </a>
+                  <button id="copyEmailBtn" style="background: none; border: 1px solid var(--outline-variant); color: var(--on-surface-variant); cursor: pointer; padding: 4px 8px; font-family: var(--font-mono); font-size: 11px; display: inline-flex; align-items: center; gap: 4px; transition: all var(--transition-fast);" title="Salin Alamat Email">
+                    <span class="material-symbols-outlined" style="font-size: 14px;">content_copy</span> <span id="copyBtnLabel" data-i18n="btnCopy">Salin</span>
+                  </button>
+                </div>
+                
+                <a href="https://github.com/Atnan49" target="_blank" rel="noopener noreferrer" class="contact-link" style="margin-top: 0;">
+                  github.com/Atnan49
+                </a>
+                <a href="https://www.instagram.com/atnan_79/?hl=en" target="_blank" rel="noopener noreferrer" class="contact-link" style="margin-top: 0;">
+                  instagram.com/atnan_79
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Form -->
+          <div class="form-box">
+            <form id="contactForm">
+              <div class="form-group">
+                <label class="form-label" for="userName" data-i18n="labelName">Nama Anda</label>
+                <input type="text" id="userName" class="form-input" placeholder="Masukkan nama lengkap Anda" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="userEmail" data-i18n="labelEmail">Alamat Email Anda</label>
+                <input type="email" id="userEmail" class="form-input" placeholder="email.anda@domain.com" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="userMessage" data-i18n="labelMessage">Detail Proyek / Pesan</label>
+                <textarea id="userMessage" class="form-textarea" placeholder="Jelaskan proyek web, kebutuhan PWA, atau pertanyaan Anda..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn-blade" style="margin-top: 16px;">
+                <span id="btnSubmitText"><span data-i18n="btnSend">Kirim Pesan ke Atnan</span> <span class="material-symbols-outlined">send</span></span>
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Project Details Modal -->
+  <div class="modal-backdrop" id="projectModal">
+    <div class="modal-container">
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="Tutup Modal Proyek">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <span class="bento-tag" id="modalCategory">Rilis & PWA</span>
+      <h2 class="section-title" id="modalTitle" style="margin: 12px 0 24px 0;">Judul Proyek</h2>
+      <img id="modalImage" src="" alt="Preview Proyek" style="width: 100%; height: 380px; object-fit: cover; margin-bottom: 24px; border: 1px solid var(--outline-variant);" />
+      
+      <p id="modalDescription" style="color: var(--on-surface-variant); font-size: 16px; line-height: 1.8; margin-bottom: 24px;">
+        Deskripsi detail studi kasus proyek.
+      </p>
+
+      <div style="display: flex; gap: 12px; align-items: center; border-top: 1px solid var(--outline-variant); padding-top: 20px; flex-wrap: wrap;">
+        <a id="modalLiveUrl" href="#" target="_blank" rel="noopener noreferrer" class="btn-blade" style="padding: 10px 22px; font-size: 11px;">
+          <span><span id="modalLiveBtnText">Kunjungi Website Live</span> <span class="material-symbols-outlined" style="font-size: 15px;">open_in_new</span></span>
+        </a>
+        <a id="modalRepoUrl" href="#" target="_blank" rel="noopener noreferrer" class="btn-blade" style="padding: 10px 22px; font-size: 11px; border-color: var(--outline-variant); color: var(--on-surface-variant);">
+          <span>GitHub Repo <span class="material-symbols-outlined" style="font-size: 15px;">code</span></span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <a href="#home" class="logo-brand">
+          <span class="logo-box">AT</span> ATNAN
+        </a>
+        
+        <ul class="footer-nav">
+          <li><a href="#home" data-i18n="navHome">Beranda</a></li>
+          <li><a href="#works" data-i18n="navWorks">Proyek</a></li>
+          <li><a href="#skills" data-i18n="navSkills">Keahlian</a></li>
+          <li><a href="#about" data-i18n="navAbout">Tentang</a></li>
+          <li><a href="#contact" data-i18n="navContact">Kontak</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 Atnan (atnanseptian1@gmail.com). Hak Cipta Dilindungi.</p>
+        <div class="footer-socials">
+          <a href="mailto:atnanseptian1@gmail.com" class="social-icon" title="Email Atnan (atnanseptian1@gmail.com)"><span class="material-symbols-outlined">mail</span></a>
+          <a href="https://github.com/Atnan49" target="_blank" rel="noopener noreferrer" class="social-icon" title="GitHub Profile"><span class="material-symbols-outlined">code</span></a>
+          <a href="https://www.instagram.com/atnan_79/?hl=en" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram Profile"><span class="material-symbols-outlined">photo_camera</span></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
