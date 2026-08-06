@@ -397,8 +397,8 @@ const PROJECT_DATABASE = {
   },
   'qomar-app': {
     title: {
-      id: 'QOMAR — Komik Digital Bahasa Arab',
-      en: 'QOMAR — Arabic Digital Comic Platform'
+      id: 'QOMAR Komik Digital Bahasa Arab',
+      en: 'QOMAR Arabic Digital Comic Platform'
     },
     category: {
       id: 'qomar-mi.vercel.app • PWA Offline • Kolaborasi Seraphic.Std',
@@ -506,10 +506,10 @@ function initCopyEmail() {
     navigator.clipboard.writeText(emailStr).then(() => {
       const msg = currentLanguage === 'en' ? 'Email copied to clipboard!' : 'Alamat email berhasil disalin!';
       showToast(msg, 'content_copy');
-      
+
       const copyLabel = document.getElementById('copyBtnLabel');
       if (copyLabel) copyLabel.textContent = currentLanguage === 'en' ? 'Copied!' : 'Tersalin!';
-      
+
       setTimeout(() => {
         if (copyLabel) copyLabel.textContent = currentLanguage === 'en' ? 'Copy' : 'Salin';
       }, 2500);
@@ -544,7 +544,7 @@ function initContactForm() {
 
       const appOpened = currentLanguage === 'en' ? 'Mail Client Opened' : 'Aplikasi Email Terbuka';
       btnSubmitText.innerHTML = `${appOpened} <span class="material-symbols-outlined" style="color: var(--crimson-light);">mark_email_read</span>`;
-      
+
       const toastMsg = currentLanguage === 'en' ? 'Opening email client to send to atnanseptian1@gmail.com!' : 'Membuka aplikasi email untuk mengirim ke atnanseptian1@gmail.com!';
       showToast(toastMsg);
       form.reset();
@@ -585,7 +585,7 @@ const TRANSLATIONS = {
     skillTitle3: "Deployment & Tools",
     aboutTag: "// Tentang Atnan",
     aboutCardTitle: "Mengembangkan Kode Berdampak",
-    aboutCardDesc: "Membangun aplikasi web produksi live—dari platform edukasi digital hingga sistem event kampus.",
+    aboutCardDesc: "Membangun aplikasi web produksi live - dari platform edukasi digital hingga sistem event kampus.",
     ethosTag: "// Etos Rekayasa Web",
     ethosTitle: "Kedisiplinan Dalam<br /><span style=\"color: var(--crimson-light); font-style: italic;\">Setiap Baris Kode.</span>",
     ethosText: "Saya Atnan, seorang Developer Web Full-Stack yang berspesialisasi dalam membangun aplikasi web dan platform digital berkinerja tinggi. Fokus saya adalah menciptakan pengalaman digital yang cepat, responsif, dapat diinstall, dan didukung arsitektur cloud yang tangguh.",
@@ -632,7 +632,7 @@ const TRANSLATIONS = {
     skillTitle3: "Deployment & Tools",
     aboutTag: "// About Atnan",
     aboutCardTitle: "Crafting Purposeful Code",
-    aboutCardDesc: "Building live web applications—from digital education platforms to campus event systems.",
+    aboutCardDesc: "Building live web applications - from digital education platforms to campus event systems.",
     ethosTag: "// Engineering Ethos",
     ethosTitle: "Discipline in<br /><span style=\"color: var(--crimson-light); font-style: italic;\">Every Line of Code.</span>",
     ethosText: "I am Atnan, a Full-Stack Web Developer specialized in building high-performance web applications and digital platforms. I focus on creating fast, responsive, installable digital experiences backed by robust cloud infrastructure.",
@@ -705,7 +705,7 @@ function applyTranslations(lang) {
 
 function initLanguageSwitcher() {
   const langBtn = document.getElementById('langToggleBtn');
-  
+
   if (langBtn) {
     langBtn.addEventListener('click', () => {
       const nextLang = currentLanguage === 'id' ? 'en' : 'id';
@@ -734,7 +734,7 @@ function initAudioUnlock() {
       }
     }
     if (audioCtx && audioCtx.state === 'suspended') {
-      audioCtx.resume().catch(() => {});
+      audioCtx.resume().catch(() => { });
     }
   };
 
@@ -752,7 +752,7 @@ function getAudioContext() {
     }
   }
   if (audioCtx && audioCtx.state === 'suspended') {
-    audioCtx.resume().catch(() => {});
+    audioCtx.resume().catch(() => { });
   }
   return audioCtx && audioCtx.state === 'running' ? audioCtx : null;
 }
@@ -789,7 +789,7 @@ function playKatanaChime() {
     osc2.start();
     osc1.stop(ctx.currentTime + 0.12);
     osc2.stop(ctx.currentTime + 0.08);
-  } catch (e) {}
+  } catch (e) { }
 }
 
 // 2. Epic Ronin Unsheathing & Sub-Bass Zen Swell (Cinematic Intro Opening)
@@ -849,7 +849,7 @@ function playCinematicOpeningSFX() {
     if (typeof playKatanaChime === 'function') {
       setTimeout(playKatanaChime, 100);
     }
-  } catch (e) {}
+  } catch (e) { }
 }
 
 // 3. Subtle Suikinkutsu Micro Water Ripple (Hover - Soft & Tranquil)
@@ -874,7 +874,7 @@ function playHoverTick() {
 
     osc.start();
     osc.stop(ctx.currentTime + 0.035);
-  } catch (e) {}
+  } catch (e) { }
 }
 
 function initSoundFX() {
