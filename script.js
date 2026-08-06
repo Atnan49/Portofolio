@@ -24,14 +24,43 @@ document.addEventListener('DOMContentLoaded', () => {
 function initCanvasFX() {
   const canvas = document.getElementById('inkCanvas');
   if (!canvas) return;
-  const ctx = canvas.getContext('2d');
 
+  // Disable interactive particle canvas on mobile touch screens for max performance & zero TBT penalty
+  const isTouchMobile = window.innerWidth < 768 || ('ontouchstart' in window && !window.matchMedia('(pointer: fine)').matches);
+  if (isTouchMobile) {
+    canvas.style.display = 'none';
+    return;
+  }
+
+  const ctx = canvas.getContext('2d');
   let width = (canvas.width = window.innerWidth);
   let height = (canvas.height = window.innerHeight);
+  let isRunning = true;
 
   window.addEventListener('resize', () => {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
+  });
+
+  // Pause animation loop when tab is hidden or page is scrolled down past hero
+  const heroSec = document.getElementById('home');
+  if (heroSec && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        isRunning = entry.isIntersecting && !document.hidden;
+        if (isRunning) requestAnimationFrame(render);
+      });
+    }, { threshold: 0.1 });
+    observer.observe(heroSec);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      isRunning = false;
+    } else {
+      isRunning = true;
+      requestAnimationFrame(render);
+    }
   });
 
   // Mouse State with Instant 1:1 Precision
@@ -99,6 +128,7 @@ function initCanvasFX() {
   const maxRibbon = 24;
 
   function render() {
+    if (!isRunning) return;
     ctx.clearRect(0, 0, width, height);
 
     if (mouse.active) {
