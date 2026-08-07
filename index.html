@@ -201,16 +201,41 @@
           <!-- Filter Buttons -->
           <div class="filter-tabs" id="filterTabs">
             <button class="filter-btn active" data-filter="all" data-i18n="filterAll">Semua Proyek</button>
+            <button class="filter-btn" data-filter="app" data-i18n="filterApp">Sistem & PWA</button>
             <button class="filter-btn" data-filter="edu" data-i18n="filterUDL">Edukasi Digital</button>
             <button class="filter-btn" data-filter="event" data-i18n="filterEvent">Sistem Event</button>
           </div>
         </div>
 
-        <!-- Bento Grid Showcase (3 Curated Production Projects) -->
+        <!-- Bento Grid Showcase (4 Curated Production Projects) -->
         <div class="bento-grid" id="projectsGrid">
           
-          <!-- Project 1 (Full Width - PARTI Platform) -->
-          <div class="bento-card col-12" data-category="event" data-id="parti-mini">
+          <!-- Project 1 (Full Width - SakuPOS App Kasir Offline) -->
+          <div class="bento-card col-12" data-category="app" data-id="sakupos-app">
+            <div class="bento-info">
+              <span class="bento-tag" id="tag-sakupos">app-kasir-offline.vercel.app • PWA Offline • React 19</span>
+              <h3 class="bento-title" id="title-sakupos">SakuPOS — Kasir Offline & Inventory System</h3>
+              <p class="bento-desc" id="desc-sakupos">Aplikasi Point of Sale (POS) & Manajemen Stok 100% Offline-First berbasis React 19, TypeScript, Dexie.js (IndexedDB), Supabase Sync, Barcode Scanner, & Cetak Struk Thermal.</p>
+              
+              <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
+                <span class="btn-blade-sm">
+                  <span>Detail Studi Kasus <span class="material-symbols-outlined">arrow_forward</span></span>
+                </span>
+                <a href="https://app-kasir-offline.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-blade-sm" onclick="event.stopPropagation();" style="border-color: var(--outline-variant); color: var(--on-surface-variant);">
+                  <span>Kunjungi Live Site <span class="material-symbols-outlined">open_in_new</span></span>
+                </a>
+              </div>
+            </div>
+
+            <div class="bento-device-container">
+              <div class="bento-device-frame">
+                <img src="project-sakupos.webp" alt="SakuPOS Offline POS PWA UI" class="bento-device-img" loading="lazy" decoding="async" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 2 (Full Width Reverse - PARTI Platform) -->
+          <div class="bento-card col-12 bento-card-reverse" data-category="event" data-id="parti-mini">
             <div class="bento-info">
               <span class="bento-tag" id="tag-parti">Live di Render • PWA • Platform Event</span>
               <h3 class="bento-title" id="title-parti">PARTI Himatif UMS Platform</h3>

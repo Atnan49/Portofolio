@@ -383,6 +383,27 @@ function initBentoFilters() {
 /* 5. ATNAN'S AUTHENTIC PWA PRODUCTION PROJECTS DATABASE                      */
 /* -------------------------------------------------------------------------- */
 const PROJECT_DATABASE = {
+  'sakupos-app': {
+    title: {
+      id: 'SakuPOS - Kasir Offline & Stock Management',
+      en: 'SakuPOS - Offline POS & Inventory System'
+    },
+    category: {
+      id: 'app-kasir-offline.vercel.app • PWA Offline • React 19',
+      en: 'app-kasir-offline.vercel.app • PWA Offline • React 19'
+    },
+    tag: {
+      id: 'app-kasir-offline.vercel.app • PWA Offline • React 19',
+      en: 'app-kasir-offline.vercel.app • PWA Offline • React 19'
+    },
+    liveUrl: 'https://app-kasir-offline.vercel.app/',
+    repoUrl: 'https://github.com/Atnan49/App_Kasir_Offline',
+    image: 'project-sakupos.webp',
+    description: {
+      id: 'SakuPOS adalah sistem kasir Point of Sale (POS) dan manajemen inventaris tingkat enterprise yang dirancang khusus untuk UMKM. Berjalan dengan arsitektur 100% Offline-First menggunakan React 19, TypeScript, Dexie.js (IndexedDB), Supabase Cloud Sync, scan barcode hardware/kamera, serta fitur cetak struk thermal tanpa butuh koneksi internet.',
+      en: 'SakuPOS is an enterprise-grade Point of Sale (POS) & inventory management system tailored for MSMEs. Engineered with a 100% Offline-First architecture using React 19, TypeScript, Dexie.js (IndexedDB), Supabase Cloud Sync, hardware/camera barcode scanning, and thermal receipt printing without needing an active internet connection.'
+    }
+  },
   'parti-mini': {
     title: {
       id: 'PARTI Himatif UMS Platform',
@@ -606,6 +627,7 @@ const TRANSLATIONS = {
     worksTag: "// Portofolio Karya Terbaru",
     worksTitle: "Proyek<br />Unggulan Pilihan.",
     filterAll: "Semua Proyek",
+    filterApp: "Sistem & PWA",
     filterUDL: "Edukasi Digital",
     filterEvent: "Sistem Event",
     skillsTag: "// Keahlian Teknis",
@@ -653,6 +675,7 @@ const TRANSLATIONS = {
     worksTag: "// Featured Portfolio Works",
     worksTitle: "Featured<br />Production Projects.",
     filterAll: "All Projects",
+    filterApp: "Systems & PWA",
     filterUDL: "Digital Education",
     filterEvent: "Event Systems",
     skillsTag: "// Technical Expertise",
