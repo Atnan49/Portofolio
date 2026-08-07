@@ -42,21 +42,33 @@ function initCanvasFX() {
     height = canvas.height = window.innerHeight;
   });
 
-  // Pause animation loop when tab is hidden or page is scrolled down past hero
+  // Pause animation loop & clear particles when scrolled down past hero
   const heroSec = document.getElementById('home');
   if (heroSec && 'IntersectionObserver' in window) {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
+        const wasRunning = isRunning;
         isRunning = entry.isIntersecting && !document.hidden;
-        if (isRunning) requestAnimationFrame(render);
+        if (!isRunning) {
+          ctx.clearRect(0, 0, width, height);
+          slashParticles.length = 0;
+          ribbonTrail.length = 0;
+          mouse.active = false;
+        } else if (!wasRunning) {
+          requestAnimationFrame(render);
+        }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.05 });
     observer.observe(heroSec);
   }
 
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       isRunning = false;
+      ctx.clearRect(0, 0, width, height);
+      slashParticles.length = 0;
+      ribbonTrail.length = 0;
+      mouse.active = false;
     } else {
       isRunning = true;
       requestAnimationFrame(render);
@@ -75,6 +87,11 @@ function initCanvasFX() {
   let lastY = mouse.y;
 
   window.addEventListener('mousemove', (e) => {
+    if (!isRunning) {
+      mouse.active = false;
+      return;
+    }
+
     mouse.x = e.clientX;
     mouse.y = e.clientY;
     mouse.active = true;
