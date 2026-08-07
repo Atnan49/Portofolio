@@ -389,14 +389,14 @@ const PROJECT_DATABASE = {
       en: 'SakuPOS - Offline POS & Inventory System'
     },
     category: {
-      id: 'app-kasir-offline.vercel.app • PWA Offline • React 19',
-      en: 'app-kasir-offline.vercel.app • PWA Offline • React 19'
+      id: 'sakupos.atnan.my.id • PWA Offline • React 19',
+      en: 'sakupos.atnan.my.id • PWA Offline • React 19'
     },
     tag: {
-      id: 'app-kasir-offline.vercel.app • PWA Offline • React 19',
-      en: 'app-kasir-offline.vercel.app • PWA Offline • React 19'
+      id: 'sakupos.atnan.my.id • PWA Offline • React 19',
+      en: 'sakupos.atnan.my.id • PWA Offline • React 19'
     },
-    liveUrl: 'https://app-kasir-offline.vercel.app/',
+    liveUrl: 'https://sakupos.atnan.my.id/',
     repoUrl: 'https://github.com/Atnan49/App_Kasir_Offline',
     image: 'project-sakupos.webp',
     description: {
