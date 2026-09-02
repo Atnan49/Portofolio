@@ -1095,22 +1095,36 @@ details[open] .faq-toggle-icon::before {
   color: #a1a1aa;
 }
 
+.footer-brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+}
+
 .system-status-indicator {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.25rem 0.65rem;
-  background-color: #18181b;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  background-color: #121214;
   border: 1px solid #27272a;
   color: #22c55e;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
   font-weight: 700;
+  line-height: 1.4;
+  margin-top: 0.5rem;
 }
 
 .status-pulse {
   width: 8px;
   height: 8px;
+  min-width: 8px;
+  min-height: 8px;
   background-color: #22c55e;
-  display: inline-block;
+  border-radius: 0 !important;
+  flex-shrink: 0;
   animation: pulse 1.5s infinite;
 }
 
