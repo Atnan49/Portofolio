@@ -106,7 +106,28 @@ export function HeroSection() {
               ease: "expo.out",
             },
             0.12
+          )
+          .from(
+            ".js-hero-outline-wipe",
+            {
+              clipPath: "inset(0% 0% 100% 0%)",
+              scale: 1.04,
+              duration: 1.35,
+              ease: "expo.out",
+            },
+            0.16
           );
+
+        gsap.to(".js-hero-outline", {
+          y: -36,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
 
         gsap.to(".js-hero-copy", {
           y: -24,
@@ -141,9 +162,25 @@ export function HeroSection() {
     <section
       id="hero"
       ref={sectionRef}
-      className="overflow-x-clip border-b border-[#D4D4D4] bg-[#F7F7F5] text-[#0A0A0A] dark:border-[#262626] dark:bg-[#0A0A0A] dark:text-[#FAFAFA]"
+      className="relative overflow-hidden border-b border-[#D4D4D4] bg-[#F7F7F5] text-[#0A0A0A] dark:border-[#262626] dark:bg-[#0A0A0A] dark:text-[#FAFAFA]"
     >
-      <div className="mx-auto grid min-h-[calc(100svh-4.5rem)] max-w-[1440px] grid-cols-1 items-center gap-10 px-5 py-10 md:px-10 md:py-16 lg:grid-cols-12 lg:gap-16 lg:px-20 lg:py-20">
+      <div
+        aria-hidden="true"
+        className="js-hero-outline pointer-events-none absolute top-16 -right-8 z-0 flex w-[320px] select-none items-start sm:inset-y-0 sm:top-0 sm:right-auto sm:left-[30%] sm:w-[480px] sm:items-center lg:left-[40%] lg:w-[600px]"
+      >
+        <div className="js-hero-outline-wipe w-full [mask-image:linear-gradient(to_bottom,black_64%,transparent_100%)]">
+          <img
+            src="/images/atnan-outline.webp"
+            alt=""
+            width={896}
+            height={985}
+            decoding="async"
+            className="block h-auto w-full object-contain opacity-[0.13] dark:invert dark:opacity-[0.16]"
+          />
+        </div>
+      </div>
+
+      <div className="relative z-10 mx-auto grid min-h-[calc(100svh-4.5rem)] max-w-[1440px] grid-cols-1 items-center gap-10 px-5 py-10 md:px-10 md:py-16 lg:grid-cols-12 lg:gap-16 lg:px-20 lg:py-20">
         <div className="js-hero-copy flex flex-col gap-6 lg:col-span-7">
           <div className="flex flex-col gap-3">
             <h1 className="js-hero-name font-serif text-[2.25rem] leading-[1.12] font-bold tracking-tight sm:text-5xl lg:text-[3.75rem]">
