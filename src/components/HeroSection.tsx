@@ -1,9 +1,21 @@
 import { useRef } from "react";
 import { PORTFOLIO_PROFILE } from "../data/portfolio";
 import { SplitText, gsap, useGSAP } from "../lib/gsap";
+import { useAnimeTilt3D } from "../lib/useAnimeTilt3D";
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const stage3dRef = useRef<HTMLDivElement>(null);
+  const plane3dRef = useRef<HTMLDivElement>(null);
+  const backdrop3dRef = useRef<HTMLDivElement>(null);
+
+  useAnimeTilt3D({
+    stageRef: stage3dRef,
+    planeRef: plane3dRef,
+    backdropRef: backdrop3dRef,
+    maxTilt: 5.5,
+    backdropShift: 10,
+  });
 
   useGSAP(
     () => {
@@ -11,31 +23,18 @@ export function HeroSection() {
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         SplitText.create(".js-hero-name", {
-          type: "lines",
+          type: "lines, words",
           mask: "lines",
           linesClass: "gsap-split-line",
           autoSplit: true,
           onSplit(self) {
-            return gsap.from(self.lines, {
-              yPercent: 115,
-              duration: 0.56,
-              stagger: 0.08,
-              ease: "power4.out",
-            });
-          },
-        });
-
-        SplitText.create(".js-hero-role", {
-          type: "lines",
-          mask: "lines",
-          linesClass: "gsap-split-line",
-          autoSplit: true,
-          onSplit(self) {
-            return gsap.from(self.lines, {
-              yPercent: 115,
-              duration: 0.52,
-              delay: 0.08,
-              ease: "power4.out",
+            return gsap.from(self.words, {
+              yPercent: 108,
+              rotation: 1.8,
+              transformOrigin: "left bottom",
+              duration: 0.9,
+              stagger: 0.085,
+              ease: "expo.out",
             });
           },
         });
@@ -47,49 +46,82 @@ export function HeroSection() {
           autoSplit: true,
           onSplit(self) {
             return gsap.from(self.lines, {
-              yPercent: 115,
-              duration: 0.52,
-              stagger: 0.055,
-              delay: 0.14,
+              yPercent: 105,
+              duration: 0.8,
+              stagger: 0.08,
+              delay: 0.36,
               ease: "power3.out",
             });
           },
         });
 
-        const tl = gsap.timeline();
-        tl.from(
-          ".js-hero-cta > a",
-          {
-            clipPath: "inset(0% 0% 100% 0%)",
-            y: 28,
-            duration: 0.5,
-            stagger: 0.08,
-            ease: "power3.out",
-          },
-          0.18
-        )
+        const openingTl = gsap.timeline();
+
+        openingTl
+          .from(
+            ".js-hero-role",
+            {
+              clipPath: "inset(0% 100% 0% 0%)",
+              x: -14,
+              duration: 0.85,
+              ease: "power3.out",
+            },
+            0.22
+          )
+          .from(
+            ".js-hero-rule",
+            {
+              scaleX: 0,
+              transformOrigin: "left center",
+              duration: 0.72,
+              ease: "expo.out",
+            },
+            0.3
+          )
+          .from(
+            ".js-hero-cta > a",
+            {
+              y: 18,
+              opacity: 0,
+              duration: 0.7,
+              stagger: 0.1,
+              ease: "expo.out",
+            },
+            0.52
+          )
           .from(
             ".js-hero-shutter",
             {
-              clipPath: "inset(100% 0% 0% 0%)",
-              y: 36,
-              duration: 0.64,
-              ease: "power4.out",
+              clipPath: "inset(0% 0% 100% 0%)",
+              duration: 1.05,
+              ease: "expo.out",
             },
-            0.08
+            0.12
           )
           .from(
             ".js-hero-portrait",
             {
-              scale: 1.1,
-              duration: 0.72,
-              ease: "power3.out",
+              scale: 1.15,
+              duration: 1.25,
+              ease: "expo.out",
             },
-            0.08
+            0.12
           );
 
+        gsap.to(".js-hero-copy", {
+          y: -24,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+
         gsap.to(".js-hero-parallax", {
-          y: 36,
+          y: 42,
+          scale: 0.97,
           ease: "none",
           scrollTrigger: {
             trigger: sectionRef.current,
@@ -112,7 +144,7 @@ export function HeroSection() {
       className="overflow-x-clip border-b border-[#D4D4D4] bg-[#F7F7F5] text-[#0A0A0A] dark:border-[#262626] dark:bg-[#0A0A0A] dark:text-[#FAFAFA]"
     >
       <div className="mx-auto grid min-h-[calc(100svh-4.5rem)] max-w-[1440px] grid-cols-1 items-center gap-10 px-5 py-10 md:px-10 md:py-16 lg:grid-cols-12 lg:gap-16 lg:px-20 lg:py-20">
-        <div className="flex flex-col gap-6 lg:col-span-7">
+        <div className="js-hero-copy flex flex-col gap-6 lg:col-span-7">
           <div className="flex flex-col gap-3">
             <h1 className="js-hero-name font-serif text-[2.25rem] leading-[1.12] font-bold tracking-tight sm:text-5xl lg:text-[3.75rem]">
               {PORTFOLIO_PROFILE.fullName}
@@ -123,11 +155,16 @@ export function HeroSection() {
             </p>
           </div>
 
+          <div
+            aria-hidden="true"
+            className="js-hero-rule h-px w-14 bg-[#0A0A0A] dark:bg-[#FAFAFA]"
+          />
+
           <p className="js-hero-intro max-w-xl text-base leading-[1.7] text-[#525252] md:text-lg dark:text-[#A3A3A3]">
             {PORTFOLIO_PROFILE.heroIntro}
           </p>
 
-          <div className="js-hero-cta flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:gap-6">
+          <div className="js-hero-cta flex flex-col gap-3 pt-1 sm:flex-row sm:items-center sm:gap-6">
             <a
               href="#karya"
               className="inline-flex min-h-12 items-center justify-center rounded bg-[#0A0A0A] px-7 py-3 text-[15px] font-bold text-[#FAFAFA] transition-colors duration-150 hover:bg-[#262626] dark:bg-[#FAFAFA] dark:text-[#0A0A0A] dark:hover:bg-[#D4D4D4]"
@@ -146,16 +183,33 @@ export function HeroSection() {
 
         <div className="mx-auto w-full max-w-[440px] lg:col-span-5 lg:mx-0 lg:justify-self-end">
           <div className="js-hero-parallax w-full">
-            <div className="js-hero-shutter overflow-hidden rounded-[2px] border border-[#D4D4D4] bg-[#141414] dark:border-[#262626]">
-              <img
-                src={PORTFOLIO_PROFILE.portraitSrc}
-                alt={PORTFOLIO_PROFILE.portraitAlt}
-                width={PORTFOLIO_PROFILE.portraitWidth}
-                height={PORTFOLIO_PROFILE.portraitHeight}
-                fetchPriority="high"
-                decoding="async"
-                className="js-hero-portrait block h-auto w-full object-cover"
-              />
+            <div ref={stage3dRef} className="w-full [perspective:1100px]">
+              <div
+                ref={plane3dRef}
+                className="relative w-full [transform-style:preserve-3d]"
+              >
+                <div
+                  ref={backdrop3dRef}
+                  aria-hidden="true"
+                  style={{ transform: "translateZ(-24px)" }}
+                  className="pointer-events-none absolute inset-0 translate-x-2.5 translate-y-2.5 rounded-[2px] border border-[#0A0A0A]/25 dark:border-[#FAFAFA]/25"
+                />
+
+                <div
+                  style={{ transform: "translateZ(18px)" }}
+                  className="js-hero-shutter relative overflow-hidden rounded-[2px] border border-[#D4D4D4] bg-[#141414] dark:border-[#262626]"
+                >
+                  <img
+                    src={PORTFOLIO_PROFILE.portraitSrc}
+                    alt={PORTFOLIO_PROFILE.portraitAlt}
+                    width={PORTFOLIO_PROFILE.portraitWidth}
+                    height={PORTFOLIO_PROFILE.portraitHeight}
+                    fetchPriority="high"
+                    decoding="async"
+                    className="js-hero-portrait block h-auto w-full object-cover"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

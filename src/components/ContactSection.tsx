@@ -1,6 +1,12 @@
 import { useRef, useState } from "react";
 import { PORTFOLIO_PROFILE } from "../data/portfolio";
-import { SplitText, gsap, useGSAP } from "../lib/gsap";
+import {
+  ScrollTrigger,
+  createSplitRiseTrigger,
+  createVerticalRiseTrigger,
+  gsap,
+  useGSAP,
+} from "../lib/gsap";
 import {
   buildMailtoHref,
   validateContactField,
@@ -29,138 +35,117 @@ export function ContactSection() {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        SplitText.create(".js-contact-title", {
-          type: "lines",
-          mask: "lines",
-          linesClass: "gsap-split-line",
-          autoSplit: true,
-          onSplit(self) {
-            return gsap.from(self.lines, {
-              yPercent: 115,
-              duration: 0.48,
-              ease: "power4.out",
-              scrollTrigger: {
-                trigger: ".js-contact-title",
-                start: "top 90%",
-                toggleActions: "play none none reverse",
-              },
-            });
-          },
+        createSplitRiseTrigger(".js-contact-title", {
+          start: "top 72%",
+          durationIn: 0.48,
         });
 
-        SplitText.create(".js-contact-headline", {
-          type: "lines",
-          mask: "lines",
-          linesClass: "gsap-split-line",
-          autoSplit: true,
-          onSplit(self) {
-            return gsap.from(self.lines, {
-              yPercent: 115,
-              duration: 0.54,
-              stagger: 0.06,
-              ease: "power4.out",
-              scrollTrigger: {
-                trigger: ".js-contact-headline",
-                start: "top 88%",
-                toggleActions: "play none none reverse",
-              },
-            });
-          },
+        createSplitRiseTrigger(".js-contact-headline", {
+          start: "top 72%",
+          stagger: 0.06,
+          durationIn: 0.52,
         });
 
-        SplitText.create(".js-contact-copy", {
-          type: "lines",
-          mask: "lines",
-          linesClass: "gsap-split-line",
-          autoSplit: true,
-          onSplit(self) {
-            return gsap.from(self.lines, {
-              yPercent: 115,
-              duration: 0.48,
-              stagger: 0.045,
+        createSplitRiseTrigger(".js-contact-copy", {
+          start: "top 74%",
+          stagger: 0.045,
+          durationIn: 0.48,
+        });
+
+        createVerticalRiseTrigger(".js-contact-actions", {
+          y: 52,
+          scale: 1,
+          start: "top 74%",
+        });
+
+        gsap.set(".js-contact-form", { y: 72, scale: 0.95, opacity: 0 });
+        gsap.set(".js-contact-field", { y: 22, opacity: 0 });
+
+        ScrollTrigger.create({
+          trigger: ".js-contact-form",
+          start: "top 72%",
+          end: "max",
+          onEnter: () => {
+            gsap.to(".js-contact-form", {
+              y: 0,
+              scale: 1,
+              opacity: 1,
+              duration: 0.52,
               ease: "power3.out",
-              scrollTrigger: {
-                trigger: ".js-contact-copy",
-                start: "top 90%",
-                toggleActions: "play none none reverse",
-              },
+              overwrite: true,
             });
-          },
-        });
-
-        gsap.from(".js-contact-actions", {
-          clipPath: "inset(0% 0% 100% 0%)",
-          y: 36,
-          duration: 0.48,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".js-contact-actions",
-            start: "top 92%",
-            toggleActions: "play none none reverse",
-          },
-        });
-
-        const formTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: ".js-contact-form",
-            start: "top 90%",
-            toggleActions: "play none none reverse",
-          },
-        });
-
-        formTl
-          .from(".js-contact-form", {
-            y: 62,
-            scale: 0.95,
-            duration: 0.54,
-            ease: "power3.out",
-          })
-          .from(
-            ".js-contact-form",
-            {
-              opacity: 0,
-              duration: 0.16,
-              ease: "none",
-            },
-            0
-          )
-          .from(
-            ".js-contact-field",
-            {
-              y: 24,
-              duration: 0.4,
+            gsap.to(".js-contact-field", {
+              y: 0,
+              opacity: 1,
+              duration: 0.42,
               stagger: 0.05,
+              delay: 0.06,
               ease: "power3.out",
-            },
-            0.1
-          );
-
-        const footerTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: ".js-footer",
-            start: "top 98%",
-            toggleActions: "play none none reverse",
+              overwrite: true,
+            });
+          },
+          onLeaveBack: () => {
+            gsap.to(".js-contact-field", {
+              y: 22,
+              opacity: 0,
+              duration: 0.24,
+              stagger: { each: 0.03, from: "end" },
+              ease: "power2.out",
+              overwrite: true,
+            });
+            gsap.to(".js-contact-form", {
+              y: 72,
+              scale: 0.95,
+              opacity: 0,
+              duration: 0.36,
+              ease: "power2.out",
+              overwrite: true,
+            });
           },
         });
 
-        footerTl
-          .from(".js-footer-rule", {
-            scaleX: 0,
-            transformOrigin: "left center",
-            duration: 0.45,
-            ease: "power3.out",
-          })
-          .from(
-            ".js-footer-item",
-            {
-              clipPath: "inset(0% 0% 100% 0%)",
-              y: 26,
+        gsap.set(".js-footer-rule", {
+          scaleX: 0,
+          transformOrigin: "left center",
+        });
+        gsap.set(".js-footer-item", { y: 32, opacity: 0 });
+
+        ScrollTrigger.create({
+          trigger: ".js-footer",
+          start: "top 92%",
+          end: "max",
+          onEnter: () => {
+            gsap.to(".js-footer-rule", {
+              scaleX: 1,
+              duration: 0.42,
+              ease: "power3.out",
+              overwrite: true,
+            });
+            gsap.to(".js-footer-item", {
+              y: 0,
+              opacity: 1,
               duration: 0.42,
               stagger: 0.06,
               ease: "power3.out",
-            },
-            0.05
-          );
+              overwrite: true,
+            });
+          },
+          onLeaveBack: () => {
+            gsap.to(".js-footer-rule", {
+              scaleX: 0,
+              duration: 0.26,
+              ease: "power2.out",
+              overwrite: true,
+            });
+            gsap.to(".js-footer-item", {
+              y: 32,
+              opacity: 0,
+              duration: 0.28,
+              ease: "power2.out",
+              overwrite: true,
+            });
+          },
+        });
       });
 
       return () => mm.revert();

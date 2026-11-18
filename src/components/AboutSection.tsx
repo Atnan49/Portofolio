@@ -4,7 +4,13 @@ import {
   PROFILE_META,
   STACK_CATEGORIES,
 } from "../data/portfolio";
-import { SplitText, gsap, useGSAP } from "../lib/gsap";
+import {
+  ScrollTrigger,
+  createSplitRiseTrigger,
+  createVerticalRiseTrigger,
+  gsap,
+  useGSAP,
+} from "../lib/gsap";
 
 export function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -14,102 +20,63 @@ export function AboutSection() {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        SplitText.create(".js-about-title", {
-          type: "lines",
-          mask: "lines",
-          linesClass: "gsap-split-line",
-          autoSplit: true,
-          onSplit(self) {
-            return gsap.from(self.lines, {
-              yPercent: 115,
-              duration: 0.48,
-              ease: "power4.out",
-              scrollTrigger: {
-                trigger: ".js-about-title",
-                start: "top 88%",
-                toggleActions: "play none none reverse",
-              },
-            });
-          },
+        createSplitRiseTrigger(".js-about-title", {
+          start: "top 72%",
+          durationIn: 0.48,
         });
 
         gsap.utils.toArray<HTMLElement>(".js-about-meta-row").forEach((row) => {
-          gsap.from(row, {
-            clipPath: "inset(0% 0% 100% 0%)",
-            y: 34,
-            duration: 0.46,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: row,
-              start: "top 90%",
-              toggleActions: "play none none reverse",
-            },
+          createVerticalRiseTrigger(row, {
+            y: 52,
+            scale: 1,
+            start: "top 74%",
           });
         });
 
-        SplitText.create(".js-about-lead", {
-          type: "lines",
-          mask: "lines",
-          linesClass: "gsap-split-line",
-          autoSplit: true,
-          onSplit(self) {
-            return gsap.from(self.lines, {
-              yPercent: 115,
-              duration: 0.52,
-              stagger: 0.06,
-              ease: "power4.out",
-              scrollTrigger: {
-                trigger: ".js-about-lead",
-                start: "top 88%",
-                toggleActions: "play none none reverse",
-              },
-            });
-          },
+        createSplitRiseTrigger(".js-about-lead", {
+          start: "top 72%",
+          stagger: 0.06,
+          durationIn: 0.52,
         });
 
-        SplitText.create(".js-about-body", {
-          type: "lines",
-          mask: "lines",
-          linesClass: "gsap-split-line",
-          autoSplit: true,
-          onSplit(self) {
-            return gsap.from(self.lines, {
-              yPercent: 115,
-              duration: 0.5,
-              stagger: 0.045,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: ".js-about-body",
-                start: "top 88%",
-                toggleActions: "play none none reverse",
-              },
-            });
-          },
+        createSplitRiseTrigger(".js-about-body", {
+          start: "top 74%",
+          stagger: 0.045,
+          durationIn: 0.5,
         });
 
-        gsap.from(".js-about-rule", {
+        gsap.set(".js-about-rule", {
           scaleX: 0,
           transformOrigin: "left center",
-          duration: 0.48,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".js-about-stack-block",
-            start: "top 90%",
-            toggleActions: "play none none reverse",
+        });
+
+        ScrollTrigger.create({
+          trigger: ".js-about-stack-block",
+          start: "top 74%",
+          end: "max",
+          onEnter: () => {
+            gsap.to(".js-about-rule", {
+              scaleX: 1,
+              duration: 0.45,
+              ease: "power3.out",
+              overwrite: true,
+            });
+          },
+          onLeaveBack: () => {
+            gsap.to(".js-about-rule", {
+              scaleX: 0,
+              duration: 0.3,
+              ease: "power2.out",
+              overwrite: true,
+            });
           },
         });
 
         gsap.utils.toArray<HTMLElement>(".js-about-stack-item").forEach((item) => {
-          gsap.from(item, {
-            clipPath: "inset(0% 0% 100% 0%)",
-            y: 42,
-            duration: 0.48,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: item,
-              start: "top 90%",
-              toggleActions: "play none none reverse",
-            },
+          createVerticalRiseTrigger(item, {
+            y: 56,
+            scale: 0.96,
+            start: "top 74%",
           });
         });
       });

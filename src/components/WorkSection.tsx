@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from "react";
+import { animate, createSpring } from "animejs";
 import { SELECTED_PROJECTS } from "../data/portfolio";
-import { Flip, SplitText, gsap, useGSAP } from "../lib/gsap";
+import {
+  Flip,
+  createSplitRiseTrigger,
+  createVerticalRiseTrigger,
+  gsap,
+  useGSAP,
+} from "../lib/gsap";
+import { useAnimeTilt3D } from "../lib/useAnimeTilt3D";
 
 function useIsDesktopLg(): boolean {
   const [isDesktop, setIsDesktop] = useState(() =>
@@ -31,6 +39,9 @@ export function WorkSection() {
   const containerRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<Record<string, HTMLElement | null>>({});
   const showcaseRef = useRef<HTMLDivElement>(null);
+  const stage3dRef = useRef<HTMLDivElement>(null);
+  const card3dRef = useRef<HTMLDivElement>(null);
+  const wireframe3dRef = useRef<HTMLDivElement>(null);
   const detailPanelRef = useRef<HTMLDivElement>(null);
   const flipStateRef = useRef<Flip.FlipState | null>(null);
   const originOffsetRef = useRef({ x: -160, y: 0 });
@@ -38,94 +49,50 @@ export function WorkSection() {
   const activeProject =
     SELECTED_PROJECTS.find((item) => item.id === activeId) ?? SELECTED_PROJECTS[0];
 
+  useAnimeTilt3D({
+    stageRef: stage3dRef,
+    planeRef: card3dRef,
+    backdropRef: wireframe3dRef,
+    enabled: isDesktop,
+    maxTilt: 6,
+    backdropShift: 12,
+  });
+
   const { contextSafe } = useGSAP(
     () => {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        SplitText.create(".js-work-title", {
-          type: "lines",
-          mask: "lines",
-          linesClass: "gsap-split-line",
-          autoSplit: true,
-          onSplit(self) {
-            return gsap.from(self.lines, {
-              yPercent: 115,
-              duration: 0.5,
-              ease: "power4.out",
-              scrollTrigger: {
-                trigger: ".js-work-header",
-                start: "top 88%",
-                toggleActions: "play none none reverse",
-              },
-            });
-          },
+        createSplitRiseTrigger(".js-work-title", {
+          start: "top 72%",
+          durationIn: 0.5,
         });
 
-        gsap.from(".js-work-count", {
-          clipPath: "inset(0% 0% 100% 0%)",
-          y: 28,
-          duration: 0.45,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".js-work-header",
-            start: "top 88%",
-            toggleActions: "play none none reverse",
-          },
+        createVerticalRiseTrigger(".js-work-count", {
+          trigger: ".js-work-header",
+          y: 38,
+          scale: 1,
+          start: "top 72%",
         });
 
         gsap.utils.toArray<HTMLElement>(".js-work-card").forEach((card) => {
-          const cardTl = gsap.timeline({
-            scrollTrigger: {
-              trigger: card,
-              start: "top 90%",
-              toggleActions: "play none none reverse",
-            },
+          createVerticalRiseTrigger(card, {
+            y: 64,
+            scale: 0.95,
+            start: "top 74%",
+            durationIn: 0.5,
+            durationOut: 0.34,
           });
-
-          cardTl
-            .from(card, {
-              y: 52,
-              scale: 0.95,
-              duration: 0.5,
-              ease: "power3.out",
-            })
-            .from(
-              card,
-              {
-                opacity: 0,
-                duration: 0.16,
-                ease: "none",
-              },
-              0
-            );
         });
 
         if (isDesktop && showcaseRef.current) {
-          const showcaseTl = gsap.timeline({
-            scrollTrigger: {
-              trigger: showcaseRef.current,
-              start: "top 88%",
-              toggleActions: "play none none reverse",
-            },
+          createVerticalRiseTrigger(showcaseRef.current, {
+            y: 72,
+            scale: 0.95,
+            start: "top 72%",
+            durationIn: 0.54,
+            durationOut: 0.36,
           });
-
-          showcaseTl
-            .from(showcaseRef.current, {
-              y: 62,
-              scale: 0.95,
-              duration: 0.56,
-              ease: "power3.out",
-            })
-            .from(
-              showcaseRef.current,
-              {
-                opacity: 0,
-                duration: 0.16,
-                ease: "none",
-              },
-              0
-            );
         }
       });
 
@@ -153,6 +120,15 @@ export function WorkSection() {
           absolute: true,
           scale: true,
           nested: true,
+        });
+      }
+
+      if (isDesktop && card3dRef.current) {
+        animate(card3dRef.current, {
+          rotateY: [-10, 0],
+          rotateX: [5, 0],
+          duration: 650,
+          ease: createSpring({ stiffness: 210, damping: 19 }),
         });
       }
 
@@ -223,7 +199,10 @@ export function WorkSection() {
 
   const selectProject = contextSafe((id: string) => {
     if (!isDesktop && id === activeId) {
-      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches && containerRef.current) {
+      if (
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+        containerRef.current
+      ) {
         flipStateRef.current = Flip.getState(
           containerRef.current.querySelectorAll("[data-flip-id]")
         );
@@ -234,7 +213,9 @@ export function WorkSection() {
 
     if (id === activeId) return;
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
     if (!reduceMotion && containerRef.current) {
       flipStateRef.current = Flip.getState(
         containerRef.current.querySelectorAll("[data-flip-id]")
@@ -294,7 +275,7 @@ export function WorkSection() {
             <ul
               aria-label="Daftar proyek"
               onMouseLeave={() => setHoveredId(null)}
-              className="js-work-list col-span-5 flex flex-col gap-3"
+              className="js-work-list col-span-5 flex flex-col gap-3 [perspective:1000px]"
             >
               {SELECTED_PROJECTS.map((project) => {
                 const isActive = project.id === activeProject.id;
@@ -306,14 +287,14 @@ export function WorkSection() {
                     ref={(el) => {
                       cardRefs.current[project.id] = el;
                     }}
-                    className="js-work-card relative"
+                    className="js-work-card relative [transform-style:preserve-3d]"
                   >
                     {isActive ? (
                       <>
                         <span
                           data-flip-id="work-active-bg"
                           aria-hidden="true"
-                          className="absolute inset-0 z-0 rounded border border-[#0A0A0A] bg-[#FFFFFF] shadow-[0_8px_24px_-12px_rgba(10,10,10,0.16)] dark:border-[#FAFAFA] dark:bg-[#141414] dark:shadow-[0_8px_28px_-12px_rgba(0,0,0,0.75)]"
+                          className="absolute inset-0 z-0 rounded border border-[#0A0A0A] bg-[#FFFFFF] shadow-[0_12px_28px_-14px_rgba(10,10,10,0.22)] dark:border-[#FAFAFA] dark:bg-[#141414] dark:shadow-[0_12px_32px_-12px_rgba(0,0,0,0.8)]"
                         />
                         <span
                           data-flip-id="work-active-bridge"
@@ -334,7 +315,7 @@ export function WorkSection() {
                       onMouseEnter={() => handleCardHover(project.id)}
                       onFocus={() => selectProject(project.id)}
                       aria-pressed={isActive}
-                      className="relative z-10 flex w-full items-center gap-4 p-4 text-left transition-transform duration-150 hover:translate-x-1 active:scale-[0.99]"
+                      className="relative z-10 flex w-full items-center gap-4 p-4 text-left transition-transform duration-150 hover:translate-x-1 hover:-translate-y-0.5 active:scale-[0.99]"
                     >
                       <div className="relative h-11 w-[70px] shrink-0 rounded-[2px] border border-[#D4D4D4] bg-[#141414] dark:border-[#262626]">
                         {!isActive ? (
@@ -396,64 +377,85 @@ export function WorkSection() {
               <div
                 ref={showcaseRef}
                 data-testid="desktop-project-preview"
-                className="rounded border border-[#D4D4D4] bg-[#FFFFFF] dark:border-[#262626] dark:bg-[#141414]"
+                className="w-full"
               >
-                <div className="relative aspect-[16/10] w-full bg-[#141414]">
+                <div ref={stage3dRef} className="w-full [perspective:1200px]">
                   <div
-                    key={activeProject.id}
-                    data-flip-id={`work-img-${activeProject.id}`}
-                    className="relative z-20 h-full w-full overflow-hidden rounded-t-[3px] bg-[#141414]"
+                    ref={card3dRef}
+                    data-testid="desktop-project-stage-3d"
+                    className="relative rounded border border-[#D4D4D4] bg-[#FFFFFF] [transform-style:preserve-3d] dark:border-[#262626] dark:bg-[#141414]"
                   >
-                    <img
-                      src={activeProject.imageSrc}
-                      alt={activeProject.imageAlt}
-                      width={1260}
-                      height={800}
-                      loading="lazy"
-                      decoding="async"
-                      className="block h-full w-full object-cover object-center transition-transform duration-500 ease-out hover:scale-[1.02]"
+                    <div
+                      ref={wireframe3dRef}
+                      aria-hidden="true"
+                      style={{ transform: "translateZ(-28px)" }}
+                      className="pointer-events-none absolute inset-0 translate-x-3 translate-y-3 rounded border border-[#0A0A0A]/20 dark:border-[#FAFAFA]/20"
                     />
-                  </div>
-                </div>
 
-                <div className="p-7 xl:p-8">
-                  <div
-                    ref={detailPanelRef}
-                    key={activeProject.id}
-                    className="flex flex-col gap-3"
-                  >
-                    <p className="js-detail-item text-[13px] font-semibold text-[#525252] dark:text-[#A3A3A3]">
-                      {activeProject.year} / {activeProject.stack}
-                    </p>
-
-                    <h3 className="js-detail-item font-serif text-2xl leading-[1.25] font-bold text-[#0A0A0A] xl:text-[1.75rem] dark:text-[#FAFAFA]">
-                      {activeProject.title}
-                    </h3>
-
-                    <p className="js-detail-item text-[15px] leading-[1.65] text-[#525252] dark:text-[#A3A3A3]">
-                      {activeProject.summary}
-                    </p>
-
-                    <div className="js-detail-item flex flex-wrap items-center gap-4 pt-2">
-                      <a
-                        href={activeProject.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex min-h-11 items-center justify-center rounded border border-[#0A0A0A] px-5 py-2.5 text-sm font-bold text-[#0A0A0A] transition-all duration-150 hover:-translate-y-0.5 hover:bg-[#0A0A0A] hover:text-[#FAFAFA] active:scale-[0.98] dark:border-[#FAFAFA] dark:text-[#FAFAFA] dark:hover:bg-[#FAFAFA] dark:hover:text-[#0A0A0A]"
+                    <div
+                      style={{ transform: "translateZ(24px)" }}
+                      className="relative aspect-[16/10] w-full bg-[#141414] [transform-style:preserve-3d]"
+                    >
+                      <div
+                        key={activeProject.id}
+                        data-flip-id={`work-img-${activeProject.id}`}
+                        className="relative z-20 h-full w-full overflow-hidden rounded-t-[3px] bg-[#141414]"
                       >
-                        {activeProject.liveLabel}
-                      </a>
+                        <img
+                          src={activeProject.imageSrc}
+                          alt={activeProject.imageAlt}
+                          width={1260}
+                          height={800}
+                          loading="lazy"
+                          decoding="async"
+                          className="block h-full w-full object-cover object-center transition-transform duration-500 ease-out hover:scale-[1.02]"
+                        />
+                      </div>
+                    </div>
 
-                      {activeProject.repoUrl ? (
-                        <a
-                          href={activeProject.repoUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex min-h-11 items-center border-b border-[#0A0A0A] px-1 text-sm font-semibold text-[#0A0A0A] transition-opacity hover:opacity-70 dark:border-[#FAFAFA] dark:text-[#FAFAFA]"
-                        >
-                          Lihat Kode di GitHub
-                        </a>
-                      ) : null}
+                    <div
+                      style={{ transform: "translateZ(34px)" }}
+                      className="p-7 xl:p-8 [transform-style:preserve-3d]"
+                    >
+                      <div
+                        ref={detailPanelRef}
+                        key={activeProject.id}
+                        className="flex flex-col gap-3"
+                      >
+                        <p className="js-detail-item text-[13px] font-semibold text-[#525252] dark:text-[#A3A3A3]">
+                          {activeProject.year} / {activeProject.stack}
+                        </p>
+
+                        <h3 className="js-detail-item font-serif text-2xl leading-[1.25] font-bold text-[#0A0A0A] xl:text-[1.75rem] dark:text-[#FAFAFA]">
+                          {activeProject.title}
+                        </h3>
+
+                        <p className="js-detail-item text-[15px] leading-[1.65] text-[#525252] dark:text-[#A3A3A3]">
+                          {activeProject.summary}
+                        </p>
+
+                        <div className="js-detail-item flex flex-wrap items-center gap-4 pt-2">
+                          <a
+                            href={activeProject.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex min-h-11 items-center justify-center rounded border border-[#0A0A0A] px-5 py-2.5 text-sm font-bold text-[#0A0A0A] transition-colors duration-150 hover:bg-[#0A0A0A] hover:text-[#FAFAFA] dark:border-[#FAFAFA] dark:text-[#FAFAFA] dark:hover:bg-[#FAFAFA] dark:hover:text-[#0A0A0A]"
+                          >
+                            {activeProject.liveLabel}
+                          </a>
+
+                          {activeProject.repoUrl ? (
+                            <a
+                              href={activeProject.repoUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex min-h-11 items-center border-b border-[#0A0A0A] px-1 text-sm font-semibold text-[#0A0A0A] transition-opacity hover:opacity-70 dark:border-[#FAFAFA] dark:text-[#FAFAFA]"
+                            >
+                              Lihat Kode di GitHub
+                            </a>
+                          ) : null}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
