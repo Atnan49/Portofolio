@@ -22,7 +22,7 @@ export function AboutSection() {
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         createSplitRiseTrigger(".js-about-title", {
           start: "top 72%",
-          durationIn: 0.48,
+          durationIn: 0.7,
         });
 
         gsap.utils.toArray<HTMLElement>(".js-about-meta-row").forEach((row) => {
@@ -35,14 +35,14 @@ export function AboutSection() {
 
         createSplitRiseTrigger(".js-about-lead", {
           start: "top 72%",
-          stagger: 0.06,
-          durationIn: 0.52,
+          stagger: 0.08,
+          durationIn: 0.76,
         });
 
         createSplitRiseTrigger(".js-about-body", {
           start: "top 74%",
-          stagger: 0.045,
-          durationIn: 0.5,
+          stagger: 0.06,
+          durationIn: 0.72,
         });
 
         gsap.set(".js-about-rule", {
@@ -57,7 +57,7 @@ export function AboutSection() {
           onEnter: () => {
             gsap.to(".js-about-rule", {
               scaleX: 1,
-              duration: 0.45,
+              duration: 0.65,
               ease: "power3.out",
               overwrite: true,
             });
@@ -65,7 +65,7 @@ export function AboutSection() {
           onLeaveBack: () => {
             gsap.to(".js-about-rule", {
               scaleX: 0,
-              duration: 0.3,
+              duration: 0.45,
               ease: "power2.out",
               overwrite: true,
             });

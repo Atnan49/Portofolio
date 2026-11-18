@@ -112,7 +112,7 @@ export function HeroSection() {
         deskLineEl,
         {
           scaleX: [0, 1],
-          duration: 420,
+          duration: 650,
           ease: "outExpo",
         },
         0
@@ -121,9 +121,9 @@ export function HeroSection() {
         bookEl,
         {
           opacity: [0, 1],
-          scale: [0.72, 1],
-          y: [-36, 0],
-          duration: 380,
+          scale: [0.68, 1],
+          y: [-52, 0],
+          duration: 680,
           ease: "outExpo",
         },
         0
@@ -131,22 +131,22 @@ export function HeroSection() {
       .add(
         bookInnerEl,
         {
-          rotateX: [14, 42],
-          rotateY: [-16, 0],
-          duration: 480,
+          rotateX: [10, 42],
+          rotateY: [-20, 0],
+          duration: 720,
           ease: "inOutQuad",
         },
-        180
+        280
       )
-      // 2. Sampul buku terbuka lebar di atas meja
+      // 2. Sampul buku terbuka lebar perlahan di atas meja
       .add(
         bookCoverEl,
         {
           rotateY: [0, -158],
-          duration: 580,
-          ease: "inOutExpo",
+          duration: 920,
+          ease: "inOutCubic",
         },
-        360
+        780
       )
       // 3. Logo monogram mekar membesar keluar dari buku terbuka
       .add(
@@ -154,11 +154,11 @@ export function HeroSection() {
         {
           opacity: [0, 1],
           scale: [0.14, 1],
-          y: [24, 0],
-          duration: 940,
-          ease: createSpring({ stiffness: 160, damping: 18 }),
+          y: [28, 0],
+          duration: 1250,
+          ease: "outExpo",
         },
-        660
+        1380
       );
 
     if (drawables.length > 0) {
@@ -166,15 +166,15 @@ export function HeroSection() {
         drawables,
         {
           draw: ["0 0", "0 1"],
-          duration: 1080,
-          delay: stagger(16),
+          duration: 1450,
+          delay: stagger(28),
           ease: "outExpo",
         },
-        680
+        1420
       );
     }
 
-    // 4. Kartu teks hero dan kartu potret keluar dari buku lalu ditata ke kiri & kanan
+    // 4. Kartu teks hero dan kartu potret keluar satu per satu dari buku lalu ditata ke kiri & kanan
     tl.add(
       copyCardEl,
       {
@@ -184,10 +184,10 @@ export function HeroSection() {
         rotateY: [18, 0],
         rotateZ: [-6, 0],
         opacity: [0, 1],
-        duration: 860,
-        ease: createSpring({ stiffness: 155, damping: 19 }),
+        duration: 1080,
+        ease: createSpring({ stiffness: 115, damping: 18 }),
       },
-      740
+      1660
     ).add(
       portraitCardEl,
       {
@@ -197,32 +197,32 @@ export function HeroSection() {
         rotateY: [-18, 0],
         rotateZ: [6, 0],
         opacity: [0, 1],
-        duration: 860,
-        ease: createSpring({ stiffness: 155, damping: 19 }),
+        duration: 1080,
+        ease: createSpring({ stiffness: 115, damping: 18 }),
       },
-      830
+      1900
     );
 
-    // 5. Buku dan garis meja mengecil menghilang di belakang logo
+    // 5. Buku dan garis meja mengecil perlahan menghilang di belakang logo
     tl.add(
       bookEl,
       {
         scale: [1, 0.12],
         y: [0, 22],
         opacity: [1, 0],
-        duration: 540,
-        ease: "inExpo",
+        duration: 820,
+        ease: "inOutCubic",
       },
-      1140
+      2450
     ).add(
       deskLineEl,
       {
         scaleX: [1, 0.25],
         opacity: [0.7, 0],
-        duration: 460,
-        ease: "inQuad",
+        duration: 700,
+        ease: "inOutQuad",
       },
-      1160
+      2480
     );
 
     const orbitAnim = orbitRing

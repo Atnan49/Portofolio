@@ -24,8 +24,8 @@ export function createVerticalRiseTrigger(
     y = 60,
     scale = 0.96,
     start = "top 72%",
-    durationIn = 0.48,
-    durationOut = 0.34,
+    durationIn = 0.72,
+    durationOut = 0.52,
   }: VerticalRiseOptions = {}
 ) {
   gsap.set(target, { y, scale, opacity: 0 });
@@ -61,9 +61,9 @@ export function createSplitRiseTrigger(
   target: string,
   {
     start = "top 72%",
-    stagger = 0.055,
-    durationIn = 0.5,
-    durationOut = 0.34,
+    stagger = 0.075,
+    durationIn = 0.74,
+    durationOut = 0.5,
   }: {
     start?: string;
     stagger?: number;

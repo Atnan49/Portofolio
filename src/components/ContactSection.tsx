@@ -37,19 +37,19 @@ export function ContactSection() {
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         createSplitRiseTrigger(".js-contact-title", {
           start: "top 72%",
-          durationIn: 0.48,
+          durationIn: 0.7,
         });
 
         createSplitRiseTrigger(".js-contact-headline", {
           start: "top 72%",
-          stagger: 0.06,
-          durationIn: 0.52,
+          stagger: 0.08,
+          durationIn: 0.76,
         });
 
         createSplitRiseTrigger(".js-contact-copy", {
           start: "top 74%",
-          stagger: 0.045,
-          durationIn: 0.48,
+          stagger: 0.06,
+          durationIn: 0.72,
         });
 
         createVerticalRiseTrigger(".js-contact-actions", {
@@ -70,16 +70,16 @@ export function ContactSection() {
               y: 0,
               scale: 1,
               opacity: 1,
-              duration: 0.52,
+              duration: 0.74,
               ease: "power3.out",
               overwrite: true,
             });
             gsap.to(".js-contact-field", {
               y: 0,
               opacity: 1,
-              duration: 0.42,
-              stagger: 0.05,
-              delay: 0.06,
+              duration: 0.6,
+              stagger: 0.07,
+              delay: 0.1,
               ease: "power3.out",
               overwrite: true,
             });
@@ -88,8 +88,8 @@ export function ContactSection() {
             gsap.to(".js-contact-field", {
               y: 22,
               opacity: 0,
-              duration: 0.24,
-              stagger: { each: 0.03, from: "end" },
+              duration: 0.36,
+              stagger: { each: 0.04, from: "end" },
               ease: "power2.out",
               overwrite: true,
             });
@@ -97,7 +97,7 @@ export function ContactSection() {
               y: 72,
               scale: 0.95,
               opacity: 0,
-              duration: 0.36,
+              duration: 0.52,
               ease: "power2.out",
               overwrite: true,
             });
@@ -117,15 +117,15 @@ export function ContactSection() {
           onEnter: () => {
             gsap.to(".js-footer-rule", {
               scaleX: 1,
-              duration: 0.42,
+              duration: 0.6,
               ease: "power3.out",
               overwrite: true,
             });
             gsap.to(".js-footer-item", {
               y: 0,
               opacity: 1,
-              duration: 0.42,
-              stagger: 0.06,
+              duration: 0.6,
+              stagger: 0.08,
               ease: "power3.out",
               overwrite: true,
             });
@@ -133,14 +133,14 @@ export function ContactSection() {
           onLeaveBack: () => {
             gsap.to(".js-footer-rule", {
               scaleX: 0,
-              duration: 0.26,
+              duration: 0.38,
               ease: "power2.out",
               overwrite: true,
             });
             gsap.to(".js-footer-item", {
               y: 32,
               opacity: 0,
-              duration: 0.28,
+              duration: 0.42,
               ease: "power2.out",
               overwrite: true,
             });

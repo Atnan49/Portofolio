@@ -65,7 +65,7 @@ export function WorkSection() {
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         createSplitRiseTrigger(".js-work-title", {
           start: "top 72%",
-          durationIn: 0.5,
+          durationIn: 0.72,
         });
 
         createVerticalRiseTrigger(".js-work-count", {
@@ -80,8 +80,8 @@ export function WorkSection() {
             y: 64,
             scale: 0.95,
             start: "top 74%",
-            durationIn: 0.5,
-            durationOut: 0.34,
+            durationIn: 0.72,
+            durationOut: 0.52,
           });
         });
 
@@ -90,8 +90,8 @@ export function WorkSection() {
             y: 72,
             scale: 0.95,
             start: "top 72%",
-            durationIn: 0.54,
-            durationOut: 0.36,
+            durationIn: 0.78,
+            durationOut: 0.54,
           });
         }
       });
@@ -115,7 +115,7 @@ export function WorkSection() {
       if (flipTargets && flipTargets.length > 0) {
         Flip.from(state, {
           targets: flipTargets,
-          duration: 0.56,
+          duration: 0.78,
           ease: "expo.out",
           absolute: true,
           scale: true,
@@ -127,8 +127,8 @@ export function WorkSection() {
         animate(card3dRef.current, {
           rotateY: [-10, 0],
           rotateX: [5, 0],
-          duration: 650,
-          ease: createSpring({ stiffness: 210, damping: 19 }),
+          duration: 860,
+          ease: createSpring({ stiffness: 165, damping: 18 }),
         });
       }
 
@@ -149,7 +149,7 @@ export function WorkSection() {
             scale: 1,
             clipPath: "inset(0% 0% 0% 0%)",
             opacity: 1,
-            duration: 0.52,
+            duration: 0.76,
             ease: "expo.out",
             clearProps: "clipPath",
             overwrite: true,
@@ -163,9 +163,9 @@ export function WorkSection() {
             { x: -16 },
             {
               x: 0,
-              duration: 0.42,
-              stagger: 0.04,
-              delay: 0.05,
+              duration: 0.62,
+              stagger: 0.06,
+              delay: 0.08,
               ease: "power3.out",
               overwrite: true,
             }
@@ -185,7 +185,7 @@ export function WorkSection() {
             {
               clipPath: "inset(0% 0% 0% 0%)",
               y: 0,
-              duration: 0.44,
+              duration: 0.62,
               ease: "power3.out",
               clearProps: "clipPath",
               overwrite: true,
