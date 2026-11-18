@@ -50,61 +50,82 @@ export function WorkSection() {
           autoSplit: true,
           onSplit(self) {
             return gsap.from(self.lines, {
-              yPercent: 112,
+              yPercent: 115,
               duration: 0.5,
               ease: "power4.out",
               scrollTrigger: {
                 trigger: ".js-work-header",
                 start: "top 88%",
-                end: "bottom 12%",
-                toggleActions: "play reverse play reverse",
+                toggleActions: "play none none reverse",
               },
             });
           },
         });
 
         gsap.from(".js-work-count", {
-          clipPath: "inset(0% 0% 0% 100%)",
-          x: 24,
+          clipPath: "inset(0% 0% 100% 0%)",
+          y: 28,
           duration: 0.45,
           ease: "power3.out",
           scrollTrigger: {
             trigger: ".js-work-header",
             start: "top 88%",
-            end: "bottom 12%",
-            toggleActions: "play reverse play reverse",
+            toggleActions: "play none none reverse",
           },
         });
 
-        gsap.from(".js-work-card", {
-          x: isDesktop ? -44 : -26,
-          scale: 0.94,
-          opacity: 0,
-          duration: 0.52,
-          stagger: 0.065,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".js-work-list",
-            start: "top 86%",
-            end: "bottom 12%",
-            toggleActions: "play reverse play reverse",
-          },
+        gsap.utils.toArray<HTMLElement>(".js-work-card").forEach((card) => {
+          const cardTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: card,
+              start: "top 90%",
+              toggleActions: "play none none reverse",
+            },
+          });
+
+          cardTl
+            .from(card, {
+              y: 52,
+              scale: 0.95,
+              duration: 0.5,
+              ease: "power3.out",
+            })
+            .from(
+              card,
+              {
+                opacity: 0,
+                duration: 0.16,
+                ease: "none",
+              },
+              0
+            );
         });
 
         if (isDesktop && showcaseRef.current) {
-          gsap.from(showcaseRef.current, {
-            x: 44,
-            scale: 0.93,
-            opacity: 0,
-            duration: 0.56,
-            ease: "power3.out",
+          const showcaseTl = gsap.timeline({
             scrollTrigger: {
               trigger: showcaseRef.current,
-              start: "top 86%",
-              end: "bottom 12%",
-              toggleActions: "play reverse play reverse",
+              start: "top 88%",
+              toggleActions: "play none none reverse",
             },
           });
+
+          showcaseTl
+            .from(showcaseRef.current, {
+              y: 62,
+              scale: 0.95,
+              duration: 0.56,
+              ease: "power3.out",
+            })
+            .from(
+              showcaseRef.current,
+              {
+                opacity: 0,
+                duration: 0.16,
+                ease: "none",
+              },
+              0
+            );
         }
       });
 

@@ -21,31 +21,30 @@ export function AboutSection() {
           autoSplit: true,
           onSplit(self) {
             return gsap.from(self.lines, {
-              yPercent: 112,
+              yPercent: 115,
               duration: 0.48,
               ease: "power4.out",
               scrollTrigger: {
-                trigger: ".js-about-meta-col",
+                trigger: ".js-about-title",
                 start: "top 88%",
-                end: "bottom 12%",
-                toggleActions: "play reverse play reverse",
+                toggleActions: "play none none reverse",
               },
             });
           },
         });
 
-        gsap.from(".js-about-meta-row", {
-          clipPath: "inset(0% 100% 0% 0%)",
-          x: -28,
-          duration: 0.48,
-          stagger: 0.065,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".js-about-meta-col",
-            start: "top 86%",
-            end: "bottom 12%",
-            toggleActions: "play reverse play reverse",
-          },
+        gsap.utils.toArray<HTMLElement>(".js-about-meta-row").forEach((row) => {
+          gsap.from(row, {
+            clipPath: "inset(0% 0% 100% 0%)",
+            y: 34,
+            duration: 0.46,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: row,
+              start: "top 90%",
+              toggleActions: "play none none reverse",
+            },
+          });
         });
 
         SplitText.create(".js-about-lead", {
@@ -55,15 +54,14 @@ export function AboutSection() {
           autoSplit: true,
           onSplit(self) {
             return gsap.from(self.lines, {
-              yPercent: 112,
-              duration: 0.54,
+              yPercent: 115,
+              duration: 0.52,
               stagger: 0.06,
               ease: "power4.out",
               scrollTrigger: {
                 trigger: ".js-about-lead",
                 start: "top 88%",
-                end: "bottom 12%",
-                toggleActions: "play reverse play reverse",
+                toggleActions: "play none none reverse",
               },
             });
           },
@@ -76,47 +74,44 @@ export function AboutSection() {
           autoSplit: true,
           onSplit(self) {
             return gsap.from(self.lines, {
-              yPercent: 112,
+              yPercent: 115,
               duration: 0.5,
               stagger: 0.045,
               ease: "power3.out",
               scrollTrigger: {
                 trigger: ".js-about-body",
                 start: "top 88%",
-                end: "bottom 12%",
-                toggleActions: "play reverse play reverse",
+                toggleActions: "play none none reverse",
               },
             });
           },
         });
 
-        const stackTl = gsap.timeline({
+        gsap.from(".js-about-rule", {
+          scaleX: 0,
+          transformOrigin: "left center",
+          duration: 0.48,
+          ease: "power3.out",
           scrollTrigger: {
             trigger: ".js-about-stack-block",
-            start: "top 88%",
-            end: "bottom 10%",
-            toggleActions: "play reverse play reverse",
+            start: "top 90%",
+            toggleActions: "play none none reverse",
           },
         });
 
-        stackTl
-          .from(".js-about-rule", {
-            scaleX: 0,
-            transformOrigin: "left center",
+        gsap.utils.toArray<HTMLElement>(".js-about-stack-item").forEach((item) => {
+          gsap.from(item, {
+            clipPath: "inset(0% 0% 100% 0%)",
+            y: 42,
             duration: 0.48,
             ease: "power3.out",
-          })
-          .from(
-            ".js-about-stack-item",
-            {
-              clipPath: "inset(100% 0% 0% 0%)",
-              y: 24,
-              duration: 0.46,
-              stagger: 0.075,
-              ease: "power3.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 90%",
+              toggleActions: "play none none reverse",
             },
-            0.08
-          );
+          });
+        });
       });
 
       return () => mm.revert();
@@ -131,7 +126,7 @@ export function AboutSection() {
       className="overflow-x-clip border-b border-[#D4D4D4] bg-[#F7F7F5] text-[#0A0A0A] dark:border-[#262626] dark:bg-[#0A0A0A] dark:text-[#FAFAFA]"
     >
       <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 px-5 py-16 md:px-10 md:py-20 lg:grid-cols-12 lg:gap-16 lg:px-20 lg:py-24">
-        <div className="js-about-meta-col flex flex-col gap-6 lg:col-span-4">
+        <div className="flex flex-col gap-6 lg:col-span-4">
           <h2 className="js-about-title font-serif text-2xl font-bold md:text-[1.75rem]">
             Tentang
           </h2>

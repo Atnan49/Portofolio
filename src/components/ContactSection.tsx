@@ -36,14 +36,13 @@ export function ContactSection() {
           autoSplit: true,
           onSplit(self) {
             return gsap.from(self.lines, {
-              yPercent: 112,
+              yPercent: 115,
               duration: 0.48,
               ease: "power4.out",
               scrollTrigger: {
-                trigger: ".js-contact-info",
+                trigger: ".js-contact-title",
                 start: "top 90%",
-                end: "bottom top",
-                toggleActions: "play reverse play reverse",
+                toggleActions: "play none none reverse",
               },
             });
           },
@@ -56,81 +55,91 @@ export function ContactSection() {
           autoSplit: true,
           onSplit(self) {
             return gsap.from(self.lines, {
-              yPercent: 112,
+              yPercent: 115,
               duration: 0.54,
               stagger: 0.06,
               ease: "power4.out",
               scrollTrigger: {
-                trigger: ".js-contact-info",
-                start: "top 90%",
-                end: "bottom top",
-                toggleActions: "play reverse play reverse",
+                trigger: ".js-contact-headline",
+                start: "top 88%",
+                toggleActions: "play none none reverse",
               },
             });
           },
         });
 
-        const infoTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: ".js-contact-info",
-            start: "top 88%",
-            end: "bottom top",
-            toggleActions: "play reverse play reverse",
+        SplitText.create(".js-contact-copy", {
+          type: "lines",
+          mask: "lines",
+          linesClass: "gsap-split-line",
+          autoSplit: true,
+          onSplit(self) {
+            return gsap.from(self.lines, {
+              yPercent: 115,
+              duration: 0.48,
+              stagger: 0.045,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: ".js-contact-copy",
+                start: "top 90%",
+                toggleActions: "play none none reverse",
+              },
+            });
           },
         });
 
-        infoTl
-          .from(".js-contact-copy", {
-            clipPath: "inset(0% 100% 0% 0%)",
-            x: -24,
-            duration: 0.48,
-            ease: "power3.out",
-          })
-          .from(
-            ".js-contact-actions",
-            {
-              clipPath: "inset(0% 100% 0% 0%)",
-              x: -24,
-              duration: 0.48,
-              ease: "power3.out",
-            },
-            0.08
-          );
+        gsap.from(".js-contact-actions", {
+          clipPath: "inset(0% 0% 100% 0%)",
+          y: 36,
+          duration: 0.48,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".js-contact-actions",
+            start: "top 92%",
+            toggleActions: "play none none reverse",
+          },
+        });
 
         const formTl = gsap.timeline({
           scrollTrigger: {
             trigger: ".js-contact-form",
-            start: "top 92%",
-            end: "bottom top",
-            toggleActions: "play reverse play reverse",
+            start: "top 90%",
+            toggleActions: "play none none reverse",
           },
         });
 
         formTl
           .from(".js-contact-form", {
-            clipPath: "inset(100% 0% 0% 0%)",
-            y: 36,
-            scale: 0.94,
+            y: 62,
+            scale: 0.95,
             duration: 0.54,
             ease: "power3.out",
           })
           .from(
+            ".js-contact-form",
+            {
+              opacity: 0,
+              duration: 0.16,
+              ease: "none",
+            },
+            0
+          )
+          .from(
             ".js-contact-field",
             {
-              y: 16,
+              y: 24,
               duration: 0.4,
               stagger: 0.05,
               ease: "power3.out",
             },
-            0.12
+            0.1
           );
 
         const footerTl = gsap.timeline({
           scrollTrigger: {
             trigger: ".js-footer",
             start: "top 98%",
-            end: "bottom top",
-            toggleActions: "play reverse play reverse",
+            toggleActions: "play none none reverse",
           },
         });
 
@@ -145,12 +154,12 @@ export function ContactSection() {
             ".js-footer-item",
             {
               clipPath: "inset(0% 0% 100% 0%)",
-              y: 18,
-              duration: 0.4,
+              y: 26,
+              duration: 0.42,
               stagger: 0.06,
               ease: "power3.out",
             },
-            0.06
+            0.05
           );
       });
 

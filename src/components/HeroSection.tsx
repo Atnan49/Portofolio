@@ -10,13 +10,6 @@ export function HeroSection() {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const createTrigger = () => ({
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom 18%",
-          toggleActions: "play reverse play none",
-        });
-
         SplitText.create(".js-hero-name", {
           type: "lines",
           mask: "lines",
@@ -24,11 +17,10 @@ export function HeroSection() {
           autoSplit: true,
           onSplit(self) {
             return gsap.from(self.lines, {
-              yPercent: 112,
+              yPercent: 115,
               duration: 0.56,
               stagger: 0.08,
               ease: "power4.out",
-              scrollTrigger: createTrigger(),
             });
           },
         });
@@ -44,7 +36,6 @@ export function HeroSection() {
               duration: 0.52,
               delay: 0.08,
               ease: "power4.out",
-              scrollTrigger: createTrigger(),
             });
           },
         });
@@ -61,18 +52,17 @@ export function HeroSection() {
               stagger: 0.055,
               delay: 0.14,
               ease: "power3.out",
-              scrollTrigger: createTrigger(),
             });
           },
         });
 
-        const tl = gsap.timeline({ scrollTrigger: createTrigger() });
+        const tl = gsap.timeline();
         tl.from(
           ".js-hero-cta > a",
           {
-            clipPath: "inset(0% 100% 0% 0%)",
-            x: -24,
-            duration: 0.48,
+            clipPath: "inset(0% 0% 100% 0%)",
+            y: 28,
+            duration: 0.5,
             stagger: 0.08,
             ease: "power3.out",
           },
@@ -82,7 +72,8 @@ export function HeroSection() {
             ".js-hero-shutter",
             {
               clipPath: "inset(100% 0% 0% 0%)",
-              duration: 0.62,
+              y: 36,
+              duration: 0.64,
               ease: "power4.out",
             },
             0.08
@@ -90,7 +81,7 @@ export function HeroSection() {
           .from(
             ".js-hero-portrait",
             {
-              scale: 1.12,
+              scale: 1.1,
               duration: 0.72,
               ease: "power3.out",
             },
@@ -139,14 +130,14 @@ export function HeroSection() {
           <div className="js-hero-cta flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:gap-6">
             <a
               href="#karya"
-              className="inline-flex min-h-12 items-center justify-center rounded bg-[#0A0A0A] px-7 py-3 text-[15px] font-bold text-[#FAFAFA] transition-colors duration-150 hover:bg-[#262626] active:scale-[0.98] dark:bg-[#FAFAFA] dark:text-[#0A0A0A] dark:hover:bg-[#D4D4D4]"
+              className="inline-flex min-h-12 items-center justify-center rounded bg-[#0A0A0A] px-7 py-3 text-[15px] font-bold text-[#FAFAFA] transition-colors duration-150 hover:bg-[#262626] dark:bg-[#FAFAFA] dark:text-[#0A0A0A] dark:hover:bg-[#D4D4D4]"
             >
               Lihat Karya Pilihan
             </a>
 
             <a
               href="#kontak"
-              className="inline-flex min-h-12 items-center justify-center rounded border border-[#737373] px-5 py-3 text-[15px] font-semibold text-[#0A0A0A] transition-colors duration-150 hover:bg-[#0A0A0A] hover:text-[#FAFAFA] active:scale-[0.98] sm:rounded-none sm:border-0 sm:border-b sm:border-current sm:px-1 sm:hover:bg-transparent sm:hover:text-[#525252] dark:text-[#FAFAFA] dark:hover:bg-[#FAFAFA] dark:hover:text-[#0A0A0A] sm:dark:hover:bg-transparent sm:dark:hover:text-[#D4D4D4]"
+              className="inline-flex min-h-12 items-center justify-center rounded border border-[#737373] px-5 py-3 text-[15px] font-semibold text-[#0A0A0A] transition-colors duration-150 hover:bg-[#0A0A0A] hover:text-[#FAFAFA] sm:rounded-none sm:border-0 sm:border-b sm:border-current sm:px-1 sm:hover:bg-transparent sm:hover:text-[#525252] dark:text-[#FAFAFA] dark:hover:bg-[#FAFAFA] dark:hover:text-[#0A0A0A] sm:dark:hover:bg-transparent sm:dark:hover:text-[#D4D4D4]"
             >
               Hubungi Saya
             </a>
