@@ -169,7 +169,7 @@ export function HeroSection() {
     }
 
     const orbitAnim = orbitRing
-      ? animate(orbitRing, { rotate: 360, duration: 90000, loop: true, ease: "linear" })
+      ? animate(orbitRing, { rotate: 360, duration: 18000, loop: true, ease: "linear" })
       : null;
 
     return () => {

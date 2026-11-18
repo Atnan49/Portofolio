@@ -436,7 +436,8 @@ export function HeroThreeStage({
               ? 1
               : THREE.MathUtils.smoothstep(THREE.MathUtils.clamp(rawScroll, 0, 1), 0, 1);
 
-            const breathY = reducedMotion ? 0 : Math.sin(((now - idleStart) / 1000) * 1.15) * 0.022;
+            const elapsedSec = (now - idleStart) / 1000;
+            const breathY = reducedMotion ? 0 : Math.sin(elapsedSec * 1.15) * 0.022;
             const effectiveScale = animState.logoScale * (1 - 0.06 * scrollEase);
             const effectiveZ = animState.logoPosZ - 0.48 * scrollEase;
 
@@ -446,13 +447,14 @@ export function HeroThreeStage({
             logoAnchor.scale.setScalar(effectiveScale);
 
             const spread = animState.orbitSpread;
+            const orbitSway = reducedMotion ? 0 : Math.sin(elapsedSec * 0.75) * 0.14 * spread;
             if (logoOrbit0) {
-              logoOrbit0.rotation.x = ellipse0BaseX * (0.15 + 0.85 * spread);
-              logoOrbit0.rotation.y = ellipse0BaseY * (0.15 + 0.85 * spread);
+              logoOrbit0.rotation.x = ellipse0BaseX * (0.15 + 0.85 * spread) + orbitSway;
+              logoOrbit0.rotation.y = ellipse0BaseY * (0.15 + 0.85 * spread) + orbitSway * 0.8;
             }
             if (logoOrbit1) {
-              logoOrbit1.rotation.x = ellipse1BaseX * (0.15 + 0.85 * spread);
-              logoOrbit1.rotation.y = ellipse1BaseY * (0.15 + 0.85 * spread);
+              logoOrbit1.rotation.x = ellipse1BaseX * (0.15 + 0.85 * spread) - orbitSway * 0.9;
+              logoOrbit1.rotation.y = ellipse1BaseY * (0.15 + 0.85 * spread) + orbitSway;
             }
 
             const settledOpacity = isDarkNow() ? 0.34 : 0.28;
@@ -460,9 +462,10 @@ export function HeroThreeStage({
             container.style.opacity = targetOpacity.toFixed(3);
 
             if (!reducedMotion && logoAnchor.visible) {
-              if (logoOuterRing) logoOuterRing.rotation.z += delta * 0.14;
-              if (logoOrbit0) logoOrbit0.rotation.z -= delta * 0.1;
-              if (logoOrbit1) logoOrbit1.rotation.z += delta * 0.08;
+              const ringPace = 1 - 0.22 * scrollEase;
+              if (logoOuterRing) logoOuterRing.rotation.z += delta * 0.56 * ringPace;
+              if (logoOrbit0) logoOrbit0.rotation.z -= delta * 0.96 * ringPace;
+              if (logoOrbit1) logoOrbit1.rotation.z += delta * 0.74 * ringPace;
             }
           }
 
