@@ -1,8 +1,9 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
-import { createSpring, createTimeline, animate, stagger, svg } from "animejs";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { spring, createTimeline, animate, stagger, svg } from "animejs";
 import { PORTFOLIO_PROFILE } from "../data/portfolio";
 import { gsap, useGSAP } from "../lib/gsap";
 import { useAnimeTilt3D } from "../lib/useAnimeTilt3D";
+import { HeroThreeStage, type HeroStageStatus } from "./HeroThreeStage";
 
 const RADIAL_TICKS = Array.from({ length: 24 }, (_, index) => {
   const angle = (index * Math.PI) / 12;
@@ -30,6 +31,21 @@ export function HeroSection() {
   const stage3dRef = useRef<HTMLDivElement>(null);
   const plane3dRef = useRef<HTMLDivElement>(null);
   const backdrop3dRef = useRef<HTMLDivElement>(null);
+  const [stageStatus, setStageStatus] = useState<HeroStageStatus>("loading");
+  const [reducedMotion, setReducedMotion] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      : false
+  );
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReducedMotion(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   useAnimeTilt3D({
     stageRef: stage3dRef,
@@ -40,34 +56,16 @@ export function HeroSection() {
   });
 
   useLayoutEffect(() => {
-    if (typeof window === "undefined") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (typeof window === "undefined" || reducedMotion) return;
 
     const sectionEl = sectionRef.current;
-    const svgEl = markSvgRef.current;
-    const bookEl = bookRef.current;
-    const bookInnerEl = bookInnerRef.current;
-    const bookCoverEl = bookCoverRef.current;
     const deskLineEl = deskLineRef.current;
-    const emblemEl = emblemRef.current;
     const copyCardEl = copyCardRef.current;
     const portraitCardEl = portraitCardRef.current;
 
-    if (
-      !sectionEl ||
-      !svgEl ||
-      !bookEl ||
-      !bookInnerEl ||
-      !bookCoverEl ||
-      !deskLineEl ||
-      !emblemEl ||
-      !copyCardEl ||
-      !portraitCardEl
-    ) {
-      return;
-    }
+    if (!sectionEl || !deskLineEl || !copyCardEl || !portraitCardEl) return;
 
-    // Measure card targets relative to the center desk origin where the book opens
+    // Measure card targets relative to center desk origin where the 3D book opens
     const sectionRect = sectionEl.getBoundingClientRect();
     const copyRect = copyCardEl.getBoundingClientRect();
     const portraitRect = portraitCardEl.getBoundingClientRect();
@@ -80,17 +78,9 @@ export function HeroSection() {
     const portraitDx = originX - (portraitRect.left + portraitRect.width * 0.5);
     const portraitDy = originY - (portraitRect.top + portraitRect.height * 0.5);
 
-    const paths = svgEl.querySelectorAll(".js-mark-path");
-    const drawables = paths.length > 0 ? svg.createDrawable(paths) : [];
-    const orbitRing = svgEl.querySelector(".js-hero-orbit-ring");
-
     const tl = createTimeline();
 
     tl.set(deskLineEl, { scaleX: 0, opacity: 0.7 })
-      .set(bookEl, { opacity: 0, scale: 0.72, y: -36 })
-      .set(bookInnerEl, { rotateX: 14, rotateY: -16 })
-      .set(bookCoverEl, { rotateY: 0 })
-      .set(emblemEl, { opacity: 0, scale: 0.14, y: 24 })
       .set(copyCardEl, {
         x: copyDx,
         y: copyDy,
@@ -107,7 +97,6 @@ export function HeroSection() {
         rotateZ: 6,
         opacity: 0,
       })
-      // 1. Buku muncul dan diletakkan rata ke permukaan meja
       .add(
         deskLineEl,
         {
@@ -117,128 +106,109 @@ export function HeroSection() {
         },
         0
       )
+      // Deal Hero copy and portrait cards outward once the 3D book opens and logo emerges
+      .add(
+        copyCardEl,
+        {
+          x: [copyDx, 0],
+          y: [copyDy, 0],
+          scale: [0.18, 1],
+          rotateY: [18, 0],
+          rotateZ: [-6, 0],
+          opacity: [0, 1],
+          duration: 1080,
+          ease: spring({ stiffness: 115, damping: 18 }),
+        },
+        1660
+      )
+      .add(
+        portraitCardEl,
+        {
+          x: [portraitDx, 0],
+          y: [portraitDy, 0],
+          scale: [0.18, 1],
+          rotateY: [-18, 0],
+          rotateZ: [6, 0],
+          opacity: [0, 1],
+          duration: 1080,
+          ease: spring({ stiffness: 115, damping: 18 }),
+        },
+        1900
+      )
+      .add(
+        deskLineEl,
+        {
+          scaleX: [1, 0.25],
+          opacity: [0.7, 0],
+          duration: 700,
+          ease: "inOutQuad",
+        },
+        2480
+      );
+
+    return () => {
+      tl.revert();
+    };
+  }, [reducedMotion]);
+
+  // Fallback CSS book + SVG monogram choreography only if WebGL or GLB loading fails
+  useEffect(() => {
+    if (stageStatus !== "fallback" || reducedMotion) return;
+    const svgEl = markSvgRef.current;
+    const bookEl = bookRef.current;
+    const bookInnerEl = bookInnerRef.current;
+    const bookCoverEl = bookCoverRef.current;
+    const emblemEl = emblemRef.current;
+    if (!svgEl || !bookEl || !bookInnerEl || !bookCoverEl || !emblemEl) return;
+
+    const paths = svgEl.querySelectorAll(".js-mark-path");
+    const drawables = paths.length > 0 ? svg.createDrawable(paths) : [];
+    const orbitRing = svgEl.querySelector(".js-hero-orbit-ring");
+
+    const tl = createTimeline();
+    tl.set(bookEl, { opacity: 0, scale: 0.72, y: -36 })
+      .set(bookInnerEl, { rotateX: 14, rotateY: -16 })
+      .set(bookCoverEl, { rotateY: 0 })
+      .set(emblemEl, { opacity: 0, scale: 0.14, y: 24 })
       .add(
         bookEl,
-        {
-          opacity: [0, 1],
-          scale: [0.68, 1],
-          y: [-52, 0],
-          duration: 680,
-          ease: "outExpo",
-        },
+        { opacity: [0, 1], scale: [0.68, 1], y: [-52, 0], duration: 680, ease: "outExpo" },
         0
       )
       .add(
         bookInnerEl,
-        {
-          rotateX: [10, 42],
-          rotateY: [-20, 0],
-          duration: 720,
-          ease: "inOutQuad",
-        },
+        { rotateX: [10, 42], rotateY: [-20, 0], duration: 720, ease: "inOutQuad" },
         280
       )
-      // 2. Sampul buku terbuka lebar perlahan di atas meja
-      .add(
-        bookCoverEl,
-        {
-          rotateY: [0, -158],
-          duration: 920,
-          ease: "inOutCubic",
-        },
-        780
-      )
-      // 3. Logo monogram mekar membesar keluar dari buku terbuka
+      .add(bookCoverEl, { rotateY: [0, -158], duration: 920, ease: "inOutCubic" }, 780)
       .add(
         emblemEl,
-        {
-          opacity: [0, 1],
-          scale: [0.14, 1],
-          y: [28, 0],
-          duration: 1250,
-          ease: "outExpo",
-        },
+        { opacity: [0, 1], scale: [0.14, 1], y: [28, 0], duration: 1250, ease: "outExpo" },
         1380
+      )
+      .add(
+        bookEl,
+        { scale: [1, 0.12], y: [0, 22], opacity: [1, 0], duration: 820, ease: "inOutCubic" },
+        2450
       );
 
     if (drawables.length > 0) {
       tl.add(
         drawables,
-        {
-          draw: ["0 0", "0 1"],
-          duration: 1450,
-          delay: stagger(28),
-          ease: "outExpo",
-        },
+        { draw: ["0 0", "0 1"], duration: 1450, delay: stagger(28), ease: "outExpo" },
         1420
       );
     }
 
-    // 4. Kartu teks hero dan kartu potret keluar satu per satu dari buku lalu ditata ke kiri & kanan
-    tl.add(
-      copyCardEl,
-      {
-        x: [copyDx, 0],
-        y: [copyDy, 0],
-        scale: [0.18, 1],
-        rotateY: [18, 0],
-        rotateZ: [-6, 0],
-        opacity: [0, 1],
-        duration: 1080,
-        ease: createSpring({ stiffness: 115, damping: 18 }),
-      },
-      1660
-    ).add(
-      portraitCardEl,
-      {
-        x: [portraitDx, 0],
-        y: [portraitDy, 0],
-        scale: [0.18, 1],
-        rotateY: [-18, 0],
-        rotateZ: [6, 0],
-        opacity: [0, 1],
-        duration: 1080,
-        ease: createSpring({ stiffness: 115, damping: 18 }),
-      },
-      1900
-    );
-
-    // 5. Buku dan garis meja mengecil perlahan menghilang di belakang logo
-    tl.add(
-      bookEl,
-      {
-        scale: [1, 0.12],
-        y: [0, 22],
-        opacity: [1, 0],
-        duration: 820,
-        ease: "inOutCubic",
-      },
-      2450
-    ).add(
-      deskLineEl,
-      {
-        scaleX: [1, 0.25],
-        opacity: [0.7, 0],
-        duration: 700,
-        ease: "inOutQuad",
-      },
-      2480
-    );
-
     const orbitAnim = orbitRing
-      ? animate(orbitRing, {
-          rotate: 360,
-          duration: 90000,
-          loop: true,
-          ease: "linear",
-        })
+      ? animate(orbitRing, { rotate: 360, duration: 90000, loop: true, ease: "linear" })
       : null;
 
     return () => {
       tl.revert();
       orbitAnim?.revert();
     };
-  }, []);
+  }, [stageStatus, reducedMotion]);
 
   useGSAP(
     () => {
@@ -299,12 +269,11 @@ export function HeroSection() {
 
   // Guard reduced-motion visual clean state on mount when CSS classes aren't reverted
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!reducedMotion) return;
     if (copyCardRef.current) copyCardRef.current.style.opacity = "1";
     if (portraitCardRef.current) portraitCardRef.current.style.opacity = "1";
     if (emblemRef.current) emblemRef.current.style.opacity = "1";
-  }, []);
+  }, [reducedMotion]);
 
   return (
     <section
@@ -312,20 +281,24 @@ export function HeroSection() {
       ref={sectionRef}
       className="relative overflow-hidden border-b border-[#D4D4D4] bg-[#F7F7F5] text-[#0A0A0A] dark:border-[#262626] dark:bg-[#0A0A0A] dark:text-[#FAFAFA]"
     >
-      {/* Lapisan Buku Meja (Pusat Layar) & Logo Monogram di Latar */}
+      {/* Panggung 3D Blender (Buku Terbuka & Logo Monogram) + Garis Meja */}
       <div
         aria-hidden="true"
         className="js-hero-mark-parallax pointer-events-none absolute inset-0 z-0 flex items-center justify-center select-none"
       >
-        <div
-          ref={deskLineRef}
-          className="js-hero-desk motion-reduce:hidden absolute top-[calc(52%+96px)] h-px w-[280px] bg-[#0A0A0A]/30 sm:top-[calc(52%+118px)] sm:w-[380px] dark:bg-[#FAFAFA]/30"
-        />
+        <HeroThreeStage reducedMotion={reducedMotion} onStatusChange={setStageStatus} />
 
         <div
-          ref={bookRef}
-          className="js-hero-book motion-reduce:hidden pointer-events-none absolute inset-0 z-0 flex items-center justify-center [perspective:1200px]"
-        >
+          ref={deskLineRef}
+          className="js-hero-desk motion-reduce:hidden absolute top-[calc(52%+132px)] h-px w-[280px] bg-[#0A0A0A]/30 sm:top-[calc(52%+152px)] sm:w-[380px] dark:bg-[#FAFAFA]/30"
+        />
+
+        {stageStatus === "fallback" && (
+          <>
+            <div
+              ref={bookRef}
+              className="js-hero-book motion-reduce:hidden pointer-events-none absolute inset-0 z-0 flex items-center justify-center [perspective:1200px]"
+            >
           <div
             ref={bookInnerRef}
             className="relative h-[200px] w-[155px] sm:h-[260px] sm:w-[200px] lg:h-[290px] lg:w-[225px] [transform-style:preserve-3d]"
@@ -530,6 +503,8 @@ export function HeroSection() {
             />
           </svg>
         </div>
+          </>
+        )}
       </div>
 
       {/* Konten Hero Ditata Seperti Dua Kartu di Atas Meja */}
@@ -537,7 +512,7 @@ export function HeroSection() {
         <div className="js-hero-copy-parallax lg:col-span-7">
           <div
             ref={copyCardRef}
-            className="js-hero-copy-card flex flex-col gap-6 rounded border border-[#D4D4D4] bg-[#FFFFFF]/92 p-7 shadow-[0_22px_50px_-30px_rgba(10,10,10,0.2)] backdrop-blur-[2px] sm:p-9 lg:p-10 dark:border-[#262626] dark:bg-[#141414]/92 dark:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.9)]"
+            className="js-hero-copy-card flex flex-col gap-6 rounded border border-[#D4D4D4] bg-[#FFFFFF]/96 p-7 shadow-[0_22px_50px_-30px_rgba(10,10,10,0.2)] backdrop-blur-[2px] sm:p-9 lg:p-10 dark:border-[#262626] dark:bg-[#141414]/96 dark:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.9)]"
           >
             <div className="flex flex-col gap-3">
               <h1 className="font-serif text-[2.125rem] leading-[1.12] font-bold tracking-tight sm:text-5xl lg:text-[3.5rem]">
