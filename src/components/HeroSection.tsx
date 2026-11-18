@@ -1,12 +1,29 @@
 import { useEffect, useRef } from "react";
-import { animate, stagger, svg } from "animejs";
+import { animate, createSpring, createTimeline, stagger, svg } from "animejs";
 import { PORTFOLIO_PROFILE } from "../data/portfolio";
 import { SplitText, gsap, useGSAP } from "../lib/gsap";
 import { useAnimeTilt3D } from "../lib/useAnimeTilt3D";
 
+const RADIAL_TICKS = Array.from({ length: 24 }, (_, index) => {
+  const angle = (index * Math.PI) / 12;
+  const rInner = index % 3 === 0 ? 182 : 189;
+  const rOuter = 198;
+  return {
+    x1: Number((220 + Math.cos(angle) * rInner).toFixed(2)),
+    y1: Number((220 + Math.sin(angle) * rInner).toFixed(2)),
+    x2: Number((220 + Math.cos(angle) * rOuter).toFixed(2)),
+    y2: Number((220 + Math.sin(angle) * rOuter).toFixed(2)),
+    major: index % 3 === 0,
+  };
+});
+
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const markSvgRef = useRef<SVGSVGElement>(null);
+  const bookRef = useRef<HTMLDivElement>(null);
+  const bookInnerRef = useRef<HTMLDivElement>(null);
+  const bookCoverRef = useRef<HTMLDivElement>(null);
+  const emblemRef = useRef<HTMLDivElement>(null);
   const stage3dRef = useRef<HTMLDivElement>(null);
   const plane3dRef = useRef<HTMLDivElement>(null);
   const backdrop3dRef = useRef<HTMLDivElement>(null);
@@ -24,20 +41,105 @@ export function HeroSection() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const svgEl = markSvgRef.current;
-    if (!svgEl) return;
+    const bookEl = bookRef.current;
+    const bookInnerEl = bookInnerRef.current;
+    const bookCoverEl = bookCoverRef.current;
+    const emblemEl = emblemRef.current;
+    if (!svgEl || !bookEl || !bookInnerEl || !bookCoverEl || !emblemEl) return;
 
     const paths = svgEl.querySelectorAll(".js-mark-path");
-    if (paths.length === 0) return;
+    const drawables = paths.length > 0 ? svg.createDrawable(paths) : [];
+    const orbitRing = svgEl.querySelector(".js-hero-orbit-ring");
 
-    const drawAnim = animate(svg.createDrawable(paths), {
-      draw: ["0 0", "0 1"],
-      duration: 1300,
-      delay: stagger(75, { start: 180 }),
-      ease: "inOutExpo",
-    });
+    const tl = createTimeline();
+
+    tl.set(bookEl, { opacity: 0, scale: 0.65, y: 26 })
+      .set(bookInnerEl, { rotateX: 16, rotateY: -18 })
+      .set(bookCoverEl, { rotateY: 0 })
+      .set(emblemEl, { opacity: 0, scale: 0.2, y: 28 })
+      // 1. Buku monokrom muncul ke ruang 3D
+      .add(
+        bookEl,
+        {
+          opacity: [0, 1],
+          scale: [0.65, 1],
+          y: [26, 0],
+          duration: 380,
+          ease: "outExpo",
+        },
+        0
+      )
+      // 2. Sampul buku terbuka lebar dalam 3D
+      .add(
+        bookInnerEl,
+        {
+          rotateX: 8,
+          rotateY: 0,
+          duration: 580,
+          ease: "inOutExpo",
+        },
+        300
+      )
+      .add(
+        bookCoverEl,
+        {
+          rotateY: [0, -158],
+          duration: 620,
+          ease: "inOutExpo",
+        },
+        300
+      )
+      // 3. Logo monogram mekar keluar dari dalam buku sambil digambar
+      .add(
+        emblemEl,
+        {
+          opacity: [0, 1],
+          scale: [0.2, 1],
+          y: [28, 0],
+          duration: 920,
+          ease: createSpring({ stiffness: 165, damping: 18 }),
+        },
+        620
+      );
+
+    if (drawables.length > 0) {
+      tl.add(
+        drawables,
+        {
+          draw: ["0 0", "0 1"],
+          duration: 1120,
+          delay: stagger(18),
+          ease: "outExpo",
+        },
+        640
+      );
+    }
+
+    // 4. Buku mengecil ke belakang logo lalu menghilang
+    tl.add(
+      bookEl,
+      {
+        scale: [1, 0.14],
+        y: [0, 18],
+        opacity: [1, 0],
+        duration: 560,
+        ease: "inExpo",
+      },
+      1060
+    );
+
+    const orbitAnim = orbitRing
+      ? animate(orbitRing, {
+          rotate: 360,
+          duration: 90000,
+          loop: true,
+          ease: "linear",
+        })
+      : null;
 
     return () => {
-      drawAnim.revert();
+      tl.revert();
+      orbitAnim?.revert();
     };
   }, []);
 
@@ -133,7 +235,9 @@ export function HeroSection() {
           );
 
         gsap.to(".js-hero-mark-layer", {
-          y: -34,
+          y: -48,
+          scale: 1.06,
+          rotate: 5,
           ease: "none",
           scrollTrigger: {
             trigger: sectionRef.current,
@@ -180,110 +284,216 @@ export function HeroSection() {
     >
       <div
         aria-hidden="true"
-        className="js-hero-mark-layer pointer-events-none absolute top-14 -right-12 z-0 flex w-[280px] select-none items-center justify-center sm:inset-y-0 sm:top-0 sm:right-auto sm:left-[34%] sm:w-[440px] lg:left-[41%] lg:w-[540px]"
+        className="js-hero-mark-layer pointer-events-none absolute -top-6 -right-24 z-0 flex w-[460px] select-none items-center justify-center sm:top-1/2 sm:-right-16 sm:w-[680px] sm:-translate-y-1/2 lg:left-[30%] lg:right-auto lg:w-[880px]"
       >
-        <svg
-          ref={markSvgRef}
-          viewBox="0 0 320 320"
-          fill="none"
-          className="h-auto w-full text-[#0A0A0A] opacity-[0.09] dark:text-[#FAFAFA] dark:opacity-[0.11]"
+        <div
+          ref={bookRef}
+          className="js-hero-book motion-reduce:hidden pointer-events-none absolute inset-0 z-0 flex items-center justify-center [perspective:1200px]"
         >
-          <rect
-            className="js-mark-path"
-            x="24"
-            y="24"
-            width="272"
-            height="272"
-            rx="44"
-            stroke="currentColor"
-            strokeWidth="1.25"
-          />
-          <circle
-            className="js-mark-path"
-            cx="160"
-            cy="160"
-            r="108"
-            stroke="currentColor"
-            strokeWidth="1"
-            strokeDasharray="4 6"
-          />
-          <line
-            className="js-mark-path"
-            x1="54"
-            y1="266"
-            x2="266"
-            y2="54"
-            stroke="currentColor"
-            strokeWidth="0.9"
-          />
-          <line
-            className="js-mark-path"
-            x1="160"
-            y1="8"
-            x2="160"
-            y2="42"
-            stroke="currentColor"
-            strokeWidth="1.1"
-          />
-          <line
-            className="js-mark-path"
-            x1="160"
-            y1="278"
-            x2="160"
-            y2="312"
-            stroke="currentColor"
-            strokeWidth="1.1"
-          />
-          <line
-            className="js-mark-path"
-            x1="8"
-            y1="160"
-            x2="42"
-            y2="160"
-            stroke="currentColor"
-            strokeWidth="1.1"
-          />
-          <line
-            className="js-mark-path"
-            x1="278"
-            y1="160"
-            x2="312"
-            y2="160"
-            stroke="currentColor"
-            strokeWidth="1.1"
-          />
-          <path
-            className="js-mark-path"
-            d="M84 240L160 66L236 240"
-            stroke="currentColor"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            className="js-mark-path"
-            d="M112 240L160 124L208 240"
-            stroke="currentColor"
-            strokeWidth="1.4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            className="js-mark-path"
-            d="M104 186H216"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-          />
-          <circle
-            className="js-mark-path"
-            cx="244"
-            cy="76"
-            r="12"
-            stroke="currentColor"
-            strokeWidth="1.8"
-          />
-        </svg>
+          <div
+            ref={bookInnerRef}
+            className="relative h-[220px] w-[165px] -translate-x-4 sm:h-[280px] sm:w-[210px] sm:-translate-x-8 lg:h-[320px] lg:w-[240px] lg:-translate-x-16 [transform-style:preserve-3d]"
+          >
+            <div className="absolute inset-0 rounded-r-[4px] border-2 border-[#0A0A0A]/30 bg-[#F7F7F5]/80 p-5 shadow-[12px_18px_36px_-20px_rgba(10,10,10,0.28)] dark:border-[#FAFAFA]/30 dark:bg-[#141414]/80 dark:shadow-[12px_18px_36px_-18px_rgba(0,0,0,0.9)]">
+              <div className="flex h-full flex-col justify-between border-l border-[#0A0A0A]/20 pl-3.5 dark:border-[#FAFAFA]/20">
+                <div className="flex flex-col gap-2.5 pt-3">
+                  <span className="h-px w-3/4 bg-[#0A0A0A]/20 dark:bg-[#FAFAFA]/20" />
+                  <span className="h-px w-1/2 bg-[#0A0A0A]/15 dark:bg-[#FAFAFA]/15" />
+                </div>
+                <div className="flex flex-col gap-2 pb-3">
+                  <span className="h-px w-5/6 bg-[#0A0A0A]/20 dark:bg-[#FAFAFA]/20" />
+                  <span className="h-px w-2/3 bg-[#0A0A0A]/15 dark:bg-[#FAFAFA]/15" />
+                </div>
+              </div>
+            </div>
+
+            <div
+              ref={bookCoverRef}
+              className="js-book-cover absolute inset-0 origin-left rounded-r-[4px] border-2 border-[#0A0A0A]/35 bg-[#F7F7F5]/90 p-5 [transform-style:preserve-3d] dark:border-[#FAFAFA]/35 dark:bg-[#141414]/90"
+            >
+              <div className="flex h-full w-full flex-col justify-between border border-[#0A0A0A]/15 p-3 dark:border-[#FAFAFA]/15">
+                <span className="h-px w-8 bg-[#0A0A0A]/30 dark:bg-[#FAFAFA]/30" />
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded border border-[#0A0A0A]/25 dark:border-[#FAFAFA]/25">
+                  <span className="h-3 w-3 rotate-45 border border-[#0A0A0A]/35 dark:border-[#FAFAFA]/35" />
+                </div>
+                <span className="h-px w-full bg-[#0A0A0A]/20 dark:bg-[#FAFAFA]/20" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          ref={emblemRef}
+          className="js-hero-emblem relative z-10 w-full [mask-image:radial-gradient(ellipse_at_54%_50%,black_44%,transparent_86%)]"
+        >
+          <svg
+            ref={markSvgRef}
+            viewBox="0 0 440 440"
+            fill="none"
+            className="h-auto w-full text-[#0A0A0A] opacity-[0.16] dark:text-[#FAFAFA] dark:opacity-[0.18]"
+          >
+            <g
+              className="js-hero-orbit-ring"
+              style={{ transformBox: "fill-box", transformOrigin: "center" }}
+            >
+              <circle
+                className="js-mark-path"
+                cx="220"
+                cy="220"
+                r="198"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                strokeDasharray="3 8"
+              />
+              {RADIAL_TICKS.map((tick, idx) => (
+                <line
+                  key={idx}
+                  className="js-mark-path"
+                  x1={tick.x1}
+                  y1={tick.y1}
+                  x2={tick.x2}
+                  y2={tick.y2}
+                  stroke="currentColor"
+                  strokeWidth={tick.major ? "1.6" : "0.9"}
+                />
+              ))}
+            </g>
+
+            <ellipse
+              className="js-mark-path"
+              cx="220"
+              cy="220"
+              rx="192"
+              ry="70"
+              transform="rotate(-28 220 220)"
+              stroke="currentColor"
+              strokeWidth="1.15"
+            />
+            <ellipse
+              className="js-mark-path"
+              cx="220"
+              cy="220"
+              rx="192"
+              ry="70"
+              transform="rotate(28 220 220)"
+              stroke="currentColor"
+              strokeWidth="1.15"
+            />
+
+            <rect
+              className="js-mark-path"
+              x="64"
+              y="64"
+              width="312"
+              height="312"
+              rx="48"
+              stroke="currentColor"
+              strokeWidth="1.6"
+            />
+            <circle
+              className="js-mark-path"
+              cx="220"
+              cy="220"
+              r="142"
+              stroke="currentColor"
+              strokeWidth="1.25"
+            />
+
+            <line
+              className="js-mark-path"
+              x1="44"
+              y1="396"
+              x2="396"
+              y2="44"
+              stroke="currentColor"
+              strokeWidth="1"
+            />
+            <line
+              className="js-mark-path"
+              x1="220"
+              y1="26"
+              x2="220"
+              y2="78"
+              stroke="currentColor"
+              strokeWidth="1.4"
+            />
+            <line
+              className="js-mark-path"
+              x1="220"
+              y1="362"
+              x2="220"
+              y2="414"
+              stroke="currentColor"
+              strokeWidth="1.4"
+            />
+            <line
+              className="js-mark-path"
+              x1="26"
+              y1="220"
+              x2="78"
+              y2="220"
+              stroke="currentColor"
+              strokeWidth="1.4"
+            />
+            <line
+              className="js-mark-path"
+              x1="362"
+              y1="220"
+              x2="414"
+              y2="220"
+              stroke="currentColor"
+              strokeWidth="1.4"
+            />
+
+            <path
+              className="js-mark-path"
+              d="M124 318L220 96L316 318"
+              stroke="currentColor"
+              strokeWidth="3.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              className="js-mark-path"
+              d="M158 318L220 172L282 318"
+              stroke="currentColor"
+              strokeWidth="1.9"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              className="js-mark-path"
+              d="M148 250H292"
+              stroke="currentColor"
+              strokeWidth="3.4"
+              strokeLinecap="round"
+            />
+            <path
+              className="js-mark-path"
+              d="M168 236H272"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+            />
+
+            <circle
+              className="js-mark-path"
+              cx="326"
+              cy="112"
+              r="14"
+              stroke="currentColor"
+              strokeWidth="2.4"
+            />
+            <circle
+              className="js-mark-path"
+              cx="326"
+              cy="112"
+              r="5"
+              stroke="currentColor"
+              strokeWidth="1.6"
+            />
+          </svg>
+        </div>
       </div>
 
       <div className="relative z-10 mx-auto grid min-h-[calc(100svh-4.5rem)] max-w-[1440px] grid-cols-1 items-center gap-10 px-5 py-10 md:px-10 md:py-16 lg:grid-cols-12 lg:gap-16 lg:px-20 lg:py-20">
