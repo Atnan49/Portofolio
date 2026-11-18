@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <style>
+    .badge { fill: #0A0A0A; }
+    .stroke-main { stroke: #FAFAFA; }
+    .dot { fill: #FAFAFA; }
+    @media (prefers-color-scheme: dark) {
+      .badge { fill: #FAFAFA; }
+      .stroke-main { stroke: #0A0A0A; }
+      .dot { fill: #0A0A0A; }
+    }
+  </style>
+  <rect class="badge" width="64" height="64" rx="12" />
+  <path
+    class="stroke-main"
+    d="M17 48L32 14L47 48"
+    stroke-width="6"
+    stroke-linecap="square"
+    stroke-linejoin="miter"
+  />
+  <path
+    class="stroke-main"
+    d="M22.5 37H41.5"
+    stroke-width="5.5"
+    stroke-linecap="square"
+  />
+  <circle class="dot" cx="50" cy="14" r="3.5" />
+</svg>

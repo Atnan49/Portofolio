@@ -1,10 +1,12 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { animate, stagger, svg } from "animejs";
 import { PORTFOLIO_PROFILE } from "../data/portfolio";
 import { SplitText, gsap, useGSAP } from "../lib/gsap";
 import { useAnimeTilt3D } from "../lib/useAnimeTilt3D";
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const markSvgRef = useRef<SVGSVGElement>(null);
   const stage3dRef = useRef<HTMLDivElement>(null);
   const plane3dRef = useRef<HTMLDivElement>(null);
   const backdrop3dRef = useRef<HTMLDivElement>(null);
@@ -16,6 +18,28 @@ export function HeroSection() {
     maxTilt: 5.5,
     backdropShift: 10,
   });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const svgEl = markSvgRef.current;
+    if (!svgEl) return;
+
+    const paths = svgEl.querySelectorAll(".js-mark-path");
+    if (paths.length === 0) return;
+
+    const drawAnim = animate(svg.createDrawable(paths), {
+      draw: ["0 0", "0 1"],
+      duration: 1300,
+      delay: stagger(75, { start: 180 }),
+      ease: "inOutExpo",
+    });
+
+    return () => {
+      drawAnim.revert();
+    };
+  }, []);
 
   useGSAP(
     () => {
@@ -106,20 +130,10 @@ export function HeroSection() {
               ease: "expo.out",
             },
             0.12
-          )
-          .from(
-            ".js-hero-outline-wipe",
-            {
-              clipPath: "inset(0% 0% 100% 0%)",
-              scale: 1.04,
-              duration: 1.35,
-              ease: "expo.out",
-            },
-            0.16
           );
 
-        gsap.to(".js-hero-outline", {
-          y: -36,
+        gsap.to(".js-hero-mark-layer", {
+          y: -34,
           ease: "none",
           scrollTrigger: {
             trigger: sectionRef.current,
@@ -166,18 +180,110 @@ export function HeroSection() {
     >
       <div
         aria-hidden="true"
-        className="js-hero-outline pointer-events-none absolute top-16 -right-8 z-0 flex w-[320px] select-none items-start sm:inset-y-0 sm:top-0 sm:right-auto sm:left-[30%] sm:w-[480px] sm:items-center lg:left-[40%] lg:w-[600px]"
+        className="js-hero-mark-layer pointer-events-none absolute top-14 -right-12 z-0 flex w-[280px] select-none items-center justify-center sm:inset-y-0 sm:top-0 sm:right-auto sm:left-[34%] sm:w-[440px] lg:left-[41%] lg:w-[540px]"
       >
-        <div className="js-hero-outline-wipe w-full [mask-image:linear-gradient(to_bottom,black_64%,transparent_100%)]">
-          <img
-            src="/images/atnan-outline.webp"
-            alt=""
-            width={896}
-            height={985}
-            decoding="async"
-            className="block h-auto w-full object-contain opacity-[0.13] dark:invert dark:opacity-[0.16]"
+        <svg
+          ref={markSvgRef}
+          viewBox="0 0 320 320"
+          fill="none"
+          className="h-auto w-full text-[#0A0A0A] opacity-[0.09] dark:text-[#FAFAFA] dark:opacity-[0.11]"
+        >
+          <rect
+            className="js-mark-path"
+            x="24"
+            y="24"
+            width="272"
+            height="272"
+            rx="44"
+            stroke="currentColor"
+            strokeWidth="1.25"
           />
-        </div>
+          <circle
+            className="js-mark-path"
+            cx="160"
+            cy="160"
+            r="108"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeDasharray="4 6"
+          />
+          <line
+            className="js-mark-path"
+            x1="54"
+            y1="266"
+            x2="266"
+            y2="54"
+            stroke="currentColor"
+            strokeWidth="0.9"
+          />
+          <line
+            className="js-mark-path"
+            x1="160"
+            y1="8"
+            x2="160"
+            y2="42"
+            stroke="currentColor"
+            strokeWidth="1.1"
+          />
+          <line
+            className="js-mark-path"
+            x1="160"
+            y1="278"
+            x2="160"
+            y2="312"
+            stroke="currentColor"
+            strokeWidth="1.1"
+          />
+          <line
+            className="js-mark-path"
+            x1="8"
+            y1="160"
+            x2="42"
+            y2="160"
+            stroke="currentColor"
+            strokeWidth="1.1"
+          />
+          <line
+            className="js-mark-path"
+            x1="278"
+            y1="160"
+            x2="312"
+            y2="160"
+            stroke="currentColor"
+            strokeWidth="1.1"
+          />
+          <path
+            className="js-mark-path"
+            d="M84 240L160 66L236 240"
+            stroke="currentColor"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            className="js-mark-path"
+            d="M112 240L160 124L208 240"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            className="js-mark-path"
+            d="M104 186H216"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+          />
+          <circle
+            className="js-mark-path"
+            cx="244"
+            cy="76"
+            r="12"
+            stroke="currentColor"
+            strokeWidth="1.8"
+          />
+        </svg>
       </div>
 
       <div className="relative z-10 mx-auto grid min-h-[calc(100svh-4.5rem)] max-w-[1440px] grid-cols-1 items-center gap-10 px-5 py-10 md:px-10 md:py-16 lg:grid-cols-12 lg:gap-16 lg:px-20 lg:py-20">
