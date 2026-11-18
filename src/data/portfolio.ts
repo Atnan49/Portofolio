@@ -2,6 +2,7 @@ export interface ProjectItem {
   id: string;
   title: string;
   year: string;
+  role?: string;
   stack: string;
   summary: string;
   liveUrl: string;
@@ -106,6 +107,7 @@ export const SELECTED_PROJECTS: ProjectItem[] = [
     id: "miftah-shorof",
     title: "Miftah Kaidah Shorof",
     year: "2026",
+    role: "Partner",
     stack: "HTML5, CSS3, JavaScript, Universal Design for Learning, PWA",
     summary:
       "Buku digital interaktif ilmu shorof berbasis UDL dan PWA untuk pembelajaran kaidah perubahan bentuk kata Bahasa Arab bagi santri Kelas VII SMP Pondok Pesantren Al-Ikhlas Mantingan.",

@@ -10,6 +10,15 @@ import {
 } from "../lib/gsap";
 import { useAnimeTilt3D } from "../lib/useAnimeTilt3D";
 
+function RoleBadge({ role }: { role?: string }) {
+  if (!role) return null;
+  return (
+    <span className="rounded-[2px] border border-[#0A0A0A]/30 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-[#0A0A0A] dark:border-[#FAFAFA]/30 dark:text-[#FAFAFA]">
+      {role}
+    </span>
+  );
+}
+
 function useIsDesktopLg(): boolean {
   const [isDesktop, setIsDesktop] = useState(() =>
     typeof window !== "undefined" && typeof window.matchMedia === "function"
@@ -359,9 +368,12 @@ export function WorkSection() {
                           <span className="truncate font-serif text-lg font-bold text-[#0A0A0A] xl:text-xl dark:text-[#FAFAFA]">
                             {project.title}
                           </span>
-                          <span className="shrink-0 text-xs font-semibold text-[#525252] dark:text-[#A3A3A3]">
-                            {project.year}
-                          </span>
+                          <div className="flex shrink-0 items-center gap-2">
+                            <RoleBadge role={project.role} />
+                            <span className="text-xs font-semibold text-[#525252] dark:text-[#A3A3A3]">
+                              {project.year}
+                            </span>
+                          </div>
                         </div>
                         <span className="truncate text-[13px] text-[#525252] dark:text-[#A3A3A3]">
                           {project.stack}
@@ -422,9 +434,12 @@ export function WorkSection() {
                         key={activeProject.id}
                         className="flex flex-col gap-3"
                       >
-                        <p className="js-detail-item text-[13px] font-semibold text-[#525252] dark:text-[#A3A3A3]">
-                          {activeProject.year} / {activeProject.stack}
-                        </p>
+                        <div className="js-detail-item flex flex-wrap items-center gap-2.5 text-[13px] font-semibold text-[#525252] dark:text-[#A3A3A3]">
+                          <span>
+                            {activeProject.year} / {activeProject.stack}
+                          </span>
+                          <RoleBadge role={activeProject.role} />
+                        </div>
 
                         <h3 className="js-detail-item font-serif text-2xl leading-[1.25] font-bold text-[#0A0A0A] xl:text-[1.75rem] dark:text-[#FAFAFA]">
                           {activeProject.title}
@@ -505,9 +520,12 @@ export function WorkSection() {
                         <span className="font-serif text-lg font-bold text-[#0A0A0A] dark:text-[#FAFAFA]">
                           {project.title}
                         </span>
-                        <span className="shrink-0 text-xs font-semibold text-[#525252] dark:text-[#A3A3A3]">
-                          {project.year}
-                        </span>
+                        <div className="flex shrink-0 items-center gap-2">
+                          <RoleBadge role={project.role} />
+                          <span className="text-xs font-semibold text-[#525252] dark:text-[#A3A3A3]">
+                            {project.year}
+                          </span>
+                        </div>
                       </div>
                       {!isActive ? (
                         <span className="truncate text-xs text-[#525252] dark:text-[#A3A3A3]">
