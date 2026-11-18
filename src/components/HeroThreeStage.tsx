@@ -216,17 +216,17 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
     let logoOrbit1: THREE.Object3D | null = null;
 
     const animState = {
-      bookScale: 0.48,
+      bookScale: 0.45,
       bookPosX: -0.575,
-      bookPosY: -1.12,
+      bookPosY: -1.15,
       bookPosZ: 0.2,
       bookRotX: 0.18,
       bookRotY: -0.32,
       bookCoverAngle: 0,
       logoScale: 0.001,
-      logoPosY: -0.25,
-      logoPosZ: 0.58,
-      logoRotY: -0.45,
+      logoPosY: 0.15,
+      logoPosZ: 0.65,
+      logoRotY: -0.4,
       stageFade: 1,
     };
 
@@ -300,15 +300,15 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
           const tl = createTimeline();
           activeTimeline = tl;
 
-          // 1. Closed book drops flat onto desk surface and tilts toward viewer
+          // 1. Closed book drops squarely onto the lower desk rule
           tl.add(
             animState,
             {
-              bookScale: [0.48, 0.82],
-              bookPosY: [-1.12, -0.76],
-              bookPosZ: [0.22, 0.0],
+              bookScale: [0.45, 0.76],
+              bookPosY: [-1.15, -0.82],
+              bookPosZ: [0.2, 0.0],
               bookRotY: [-0.32, 0],
-              duration: 620,
+              duration: 580,
               ease: "outExpo",
             },
             0
@@ -316,75 +316,76 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
             .add(
               animState,
               {
-                bookRotX: [0.18, 0.48],
-                duration: 620,
+                bookRotX: [0.18, 0.44],
+                duration: 580,
                 ease: "inOutQuad",
               },
-              200
+              180
             )
-            // 2. Book cover pivots open and spine centers while pages spread
+            // 2. Hardcover pivots open while pages stay neatly centered at the bottom desk zone
             .add(
               animState,
               {
                 bookCoverAngle: [0, Math.PI * 0.87],
                 bookPosX: [-0.575, 0],
-                duration: 840,
-                ease: "inOutCubic",
-              },
-              600
-            )
-            // 3. Logo rises solidly strictly ABOVE & IN FRONT of the open book (zero page clipping)
-            .add(
-              animState,
-              {
-                logoScale: [0.001, 0.42],
-                logoPosY: [-0.24, 0.52],
-                logoPosZ: [0.58, 0.58],
-                logoRotY: [-0.45, 0],
-                duration: 720,
-                ease: "outExpo",
-              },
-              1320
-            )
-            // 4. Book shrinks back behind Logo and vanishes while Logo expands to center stage
-            .add(
-              animState,
-              {
-                bookScale: [0.82, 0.01],
-                bookPosY: [-0.76, 0.16],
-                bookPosZ: [0.0, -1.8],
-                duration: 700,
-                ease: "inOutCubic",
-              },
-              1980
-            )
-            .add(
-              animState,
-              {
-                logoScale: [0.42, 0.98],
-                logoPosY: [0.52, 0.14],
-                logoPosZ: [0.58, 0.12],
-                duration: 760,
-                ease: "outExpo",
-              },
-              2060
-            )
-            // 5. Logo softens into subtle architectural depth behind settled Hero cards
-            .add(
-              animState,
-              {
-                logoScale: [0.98, 0.94],
-                logoPosY: [0.14, 0.1],
-                logoPosZ: [0.12, -0.35],
-                stageFade: [1, 0],
                 duration: 780,
+                ease: "inOutCubic",
+              },
+              560
+            )
+            // 3. Collectible 3D Logo rises cleanly ABOVE the open book with visible air gap (no contact)
+            .add(
+              animState,
+              {
+                logoScale: [0.001, 0.3],
+                logoPosY: [-0.1, 0.72],
+                logoPosZ: [0.65, 0.65],
+                logoRotY: [-0.4, 0],
+                duration: 640,
+                ease: "outExpo",
+              },
+              1240
+            )
+            // 4. Book shrinks straight downward beneath the desk line until 100% gone BEFORE Logo expands
+            .add(
+              animState,
+              {
+                bookScale: [0.76, 0.005],
+                bookPosY: [-0.82, -1.25],
+                bookPosZ: [0.0, -1.1],
+                duration: 520,
+                ease: "inCubic",
+              },
+              1860
+            )
+            // 5. Only after Book has disappeared completely does Logo expand smoothly to hero scale
+            .add(
+              animState,
+              {
+                logoScale: [0.3, 0.96],
+                logoPosY: [0.72, 0.1],
+                logoPosZ: [0.65, 0.1],
+                duration: 680,
+                ease: "outExpo",
+              },
+              2360
+            )
+            // 6. Logo eases back into subtle depth as Hero cards deal outward
+            .add(
+              animState,
+              {
+                logoScale: [0.96, 0.94],
+                logoPosY: [0.1, 0.1],
+                logoPosZ: [0.1, -0.35],
+                stageFade: [1, 0],
+                duration: 760,
                 ease: "inOutQuad",
               },
-              2750
+              2980
             );
 
           const elapsed = performance.now() - mountStartTime;
-          if (elapsed > 8 && elapsed < 3900) {
+          if (elapsed > 8 && elapsed < 4200) {
             tl.seek(elapsed);
           }
         }

@@ -106,16 +106,16 @@ export function HeroSection() {
         },
         0
       )
-      // Deal Hero copy and portrait cards cleanly after Book shrinks away and Logo takes center
+      // Deal Hero copy and portrait cards once Book is gone and Logo reaches center focus
       .add(
         deskLineEl,
         {
           scaleX: [1, 0.25],
           opacity: [0.7, 0],
-          duration: 640,
-          ease: "inOutQuad",
+          duration: 500,
+          ease: "inQuad",
         },
-        2000
+        1860
       )
       .add(
         copyCardEl,
@@ -124,7 +124,7 @@ export function HeroSection() {
           duration: 240,
           ease: "outQuad",
         },
-        2580
+        2920
       )
       .add(
         copyCardEl,
@@ -136,7 +136,7 @@ export function HeroSection() {
           rotateZ: [-4, 0],
           ease: spring({ stiffness: 115, damping: 18 }),
         },
-        2580
+        2920
       )
       .add(
         portraitCardEl,
@@ -145,7 +145,7 @@ export function HeroSection() {
           duration: 240,
           ease: "outQuad",
         },
-        2800
+        3120
       )
       .add(
         portraitCardEl,
@@ -157,7 +157,7 @@ export function HeroSection() {
           rotateZ: [4, 0],
           ease: spring({ stiffness: 115, damping: 18 }),
         },
-        2800
+        3120
       );
 
     return () => {
