@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
-import { createTimeline } from "animejs";
+import { createTimeline, spring, cubicBezier } from "animejs";
 
 export type HeroStageStatus = "loading" | "ready" | "fallback";
 
@@ -106,7 +106,6 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
     let envTarget: THREE.WebGLRenderTarget | null = null;
     let renderer: THREE.WebGLRenderer | null = null;
 
-    const mountStartTime = performance.now();
     const isDarkNow = () => document.documentElement.classList.contains("dark");
 
     try {
@@ -216,19 +215,26 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
     let logoOrbit1: THREE.Object3D | null = null;
 
     const animState = {
-      bookScale: 0.45,
+      bookScale: 0.44,
       bookPosX: -0.575,
-      bookPosY: -1.15,
-      bookPosZ: 0.2,
-      bookRotX: 0.18,
-      bookRotY: -0.32,
+      bookPosY: -1.24,
+      bookPosZ: 0.18,
+      bookRotX: 0.15,
+      bookRotY: -0.45,
+      bookRotZ: 0,
       bookCoverAngle: 0,
       logoScale: 0.001,
-      logoPosY: 0.15,
-      logoPosZ: 0.65,
-      logoRotY: -0.4,
+      logoPosY: 0.16,
+      logoPosZ: 0.68,
+      logoRotY: -1.15,
+      orbitSpread: 0,
       stageFade: 1,
     };
+
+    const easeSmoothOut = cubicBezier(0.16, 1, 0.3, 1);
+    const easeBookOpen = cubicBezier(0.38, 0.04, 0.16, 1);
+    const easeLogoGlide = cubicBezier(0.36, 0, 0.16, 1);
+    const easeGentleBlend = cubicBezier(0.42, 0, 0.22, 1);
 
     loader
       .loadAsync(modelUrl)
@@ -247,6 +253,11 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
           statusCbRef.current?.("fallback");
           return;
         }
+
+        const ellipse0BaseX = logoOrbit0 ? logoOrbit0.rotation.x : 0;
+        const ellipse0BaseY = logoOrbit0 ? logoOrbit0.rotation.y : 0;
+        const ellipse1BaseX = logoOrbit1 ? logoOrbit1.rotation.x : 0;
+        const ellipse1BaseY = logoOrbit1 ? logoOrbit1.rotation.y : 0;
 
         // Clone per-mesh materials so BookRoot and LogoRoot fade independently
         gltf.scene.traverse((child) => {
@@ -285,6 +296,9 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
           activeRenderer
         );
 
+        // Pre-compile WebGL shaders before launching frame 0 so the intro never stutters
+        activeRenderer.compile(scene, camera);
+
         container.dataset.heroThreeStage = "ready";
         statusCbRef.current?.("ready");
 
@@ -295,102 +309,123 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
           animState.logoPosY = 0.1;
           animState.logoPosZ = -0.35;
           animState.logoRotY = 0;
+          animState.orbitSpread = 1;
           animState.stageFade = 0;
         } else {
           const tl = createTimeline();
           activeTimeline = tl;
 
-          // 1. Closed book drops squarely onto the lower desk rule
+          // 1. Weighted book lands onto the desk rule with a soft damped spring cushion
           tl.add(
             animState,
             {
-              bookScale: [0.45, 0.76],
-              bookPosY: [-1.15, -0.82],
-              bookPosZ: [0.2, 0.0],
-              bookRotY: [-0.32, 0],
-              duration: 580,
-              ease: "outExpo",
+              bookPosY: -0.82,
+              ease: spring({ bounce: 0.22, duration: 760 }),
             },
             0
           )
             .add(
               animState,
               {
-                bookRotX: [0.18, 0.44],
-                duration: 580,
-                ease: "inOutQuad",
+                bookScale: [0.44, 0.76],
+                bookPosZ: [0.18, 0.0],
+                bookRotY: [-0.45, 0.05],
+                duration: 740,
+                ease: easeSmoothOut,
               },
-              180
+              0
             )
-            // 2. Hardcover pivots open while pages stay neatly centered at the bottom desk zone
+            .add(
+              animState,
+              {
+                bookRotX: [0.15, 0.45],
+                duration: 840,
+                ease: easeGentleBlend,
+              },
+              140
+            )
+            // 2. Hardcover swings open smoothly while spine and body shift subtly with the weight
             .add(
               animState,
               {
                 bookCoverAngle: [0, Math.PI * 0.87],
                 bookPosX: [-0.575, 0],
-                duration: 780,
-                ease: "inOutCubic",
+                duration: 920,
+                ease: easeBookOpen,
               },
-              560
+              440
             )
-            // 3. Collectible 3D Logo rises cleanly ABOVE the open book with visible air gap (no contact)
             .add(
               animState,
               {
-                logoScale: [0.001, 0.3],
-                logoPosY: [-0.1, 0.72],
-                logoPosZ: [0.65, 0.65],
-                logoRotY: [-0.4, 0],
-                duration: 640,
-                ease: "outExpo",
+                bookRotY: [0.05, -0.05, 0],
+                bookRotZ: [0, -0.045, 0],
+                duration: 960,
+                ease: easeGentleBlend,
               },
-              1240
+              460
             )
-            // 4. Book shrinks straight downward beneath the desk line until 100% gone BEFORE Logo expands
+            // 3. Collectible Logo levitates smoothly UP above pages while spinning and unfurling rings
+            .add(
+              animState,
+              {
+                logoScale: [0.001, 0.34],
+                logoPosY: [0.16, 0.78],
+                duration: 820,
+                ease: easeSmoothOut,
+              },
+              1080
+            )
+            .add(
+              animState,
+              {
+                logoRotY: [-1.15, 0],
+                orbitSpread: [0, 1],
+                duration: 1620,
+                ease: easeSmoothOut,
+              },
+              1080
+            )
+            // 4. Book gently dips downward out of sight beneath the desk BEFORE Logo swoops down
             .add(
               animState,
               {
                 bookScale: [0.76, 0.005],
-                bookPosY: [-0.82, -1.25],
-                bookPosZ: [0.0, -1.1],
-                duration: 520,
-                ease: "inCubic",
+                bookPosY: [-0.82, -1.36],
+                bookPosZ: [0.0, -1.15],
+                bookRotX: [0.45, 0.8],
+                duration: 540,
+                ease: cubicBezier(0.55, 0, 0.9, 0.6),
               },
-              1860
+              1720
             )
-            // 5. Only after Book has disappeared completely does Logo expand smoothly to hero scale
+            // 5. Continuous S-curve sweep from apex hover into full center focus (zero dead stop)
             .add(
               animState,
               {
-                logoScale: [0.3, 0.96],
-                logoPosY: [0.72, 0.1],
-                logoPosZ: [0.65, 0.1],
-                duration: 680,
-                ease: "outExpo",
+                logoScale: [0.34, 0.96],
+                logoPosY: [0.78, 0.1],
+                duration: 900,
+                ease: easeLogoGlide,
               },
-              2360
+              1940
             )
-            // 6. Logo eases back into subtle depth as Hero cards deal outward
+            // 6. Soft atmospheric recession into subtle depth as Hero cards glide into layout
             .add(
               animState,
               {
                 logoScale: [0.96, 0.94],
-                logoPosY: [0.1, 0.1],
-                logoPosZ: [0.1, -0.35],
+                logoPosZ: [0.68, -0.35],
                 stageFade: [1, 0],
-                duration: 760,
-                ease: "inOutQuad",
+                duration: 920,
+                ease: easeGentleBlend,
               },
-              2980
+              2560
             );
-
-          const elapsed = performance.now() - mountStartTime;
-          if (elapsed > 8 && elapsed < 4200) {
-            tl.seek(elapsed);
-          }
         }
 
-        let lastTime = performance.now();
+        const idleStart = performance.now();
+        let lastTime = idleStart;
         const renderFrame = (now: number) => {
           if (disposed) return;
           const delta = Math.min((now - lastTime) / 1000, 0.05);
@@ -399,24 +434,35 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
           if (bookRoot && bookFrontPivot && logoRoot) {
             bookAnchor.visible = animState.bookScale > 0.04;
             bookAnchor.position.set(0, animState.bookPosY, animState.bookPosZ);
-            bookAnchor.rotation.set(animState.bookRotX, animState.bookRotY, 0);
+            bookAnchor.rotation.set(animState.bookRotX, animState.bookRotY, animState.bookRotZ);
             bookAnchor.scale.setScalar(animState.bookScale);
             bookRoot.position.x = animState.bookPosX;
             bookFrontPivot.rotation.z = animState.bookCoverAngle;
 
+            const breathY = reducedMotion ? 0 : Math.sin(((now - idleStart) / 1000) * 1.15) * 0.022;
             logoAnchor.visible = animState.logoScale > 0.03;
-            logoAnchor.position.set(0, animState.logoPosY, animState.logoPosZ);
+            logoAnchor.position.set(0, animState.logoPosY + breathY, animState.logoPosZ);
             logoAnchor.rotation.set(0, animState.logoRotY, 0);
             logoAnchor.scale.setScalar(animState.logoScale);
+
+            const spread = animState.orbitSpread;
+            if (logoOrbit0) {
+              logoOrbit0.rotation.x = ellipse0BaseX * (0.15 + 0.85 * spread);
+              logoOrbit0.rotation.y = ellipse0BaseY * (0.15 + 0.85 * spread);
+            }
+            if (logoOrbit1) {
+              logoOrbit1.rotation.x = ellipse1BaseX * (0.15 + 0.85 * spread);
+              logoOrbit1.rotation.y = ellipse1BaseY * (0.15 + 0.85 * spread);
+            }
 
             const settledOpacity = isDarkNow() ? 0.36 : 0.3;
             const targetOpacity = settledOpacity + (1 - settledOpacity) * animState.stageFade;
             container.style.opacity = targetOpacity.toFixed(3);
 
             if (!reducedMotion && logoAnchor.visible) {
-              if (logoOuterRing) logoOuterRing.rotation.z += delta * 0.11;
-              if (logoOrbit0) logoOrbit0.rotation.z -= delta * 0.085;
-              if (logoOrbit1) logoOrbit1.rotation.z += delta * 0.065;
+              if (logoOuterRing) logoOuterRing.rotation.z += delta * 0.14;
+              if (logoOrbit0) logoOrbit0.rotation.z -= delta * 0.1;
+              if (logoOrbit1) logoOrbit1.rotation.z += delta * 0.08;
             }
           }
 

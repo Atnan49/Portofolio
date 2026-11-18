@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { spring, createTimeline, animate, stagger, svg } from "animejs";
+import { spring, createTimeline, cubicBezier, animate, stagger, svg } from "animejs";
 import { PORTFOLIO_PROFILE } from "../data/portfolio";
 import { gsap, useGSAP } from "../lib/gsap";
 import { useAnimeTilt3D } from "../lib/useAnimeTilt3D";
@@ -47,6 +47,12 @@ export function HeroSection() {
     return () => mq.removeEventListener("change", sync);
   }, []);
 
+  useEffect(() => {
+    if (stageStatus !== "loading" || reducedMotion) return;
+    const timer = window.setTimeout(() => setStageStatus("fallback"), 2800);
+    return () => window.clearTimeout(timer);
+  }, [stageStatus, reducedMotion]);
+
   useAnimeTilt3D({
     stageRef: stage3dRef,
     planeRef: plane3dRef,
@@ -65,6 +71,14 @@ export function HeroSection() {
 
     if (!sectionEl || !deskLineEl || !copyCardEl || !portraitCardEl) return;
 
+    // Wait until Three.js pre-compiles & starts (or falls back) so card deals lock cleanly to frame 0
+    if (stageStatus === "loading") {
+      deskLineEl.style.opacity = "0";
+      copyCardEl.style.opacity = "0";
+      portraitCardEl.style.opacity = "0";
+      return;
+    }
+
     // Measure card targets relative to center desk origin where the 3D book opens
     const sectionRect = sectionEl.getBoundingClientRect();
     const copyRect = copyCardEl.getBoundingClientRect();
@@ -78,92 +92,93 @@ export function HeroSection() {
     const portraitDx = originX - (portraitRect.left + portraitRect.width * 0.5);
     const portraitDy = originY - (portraitRect.top + portraitRect.height * 0.5);
 
+    const easeSoft = cubicBezier(0.16, 1, 0.3, 1);
     const tl = createTimeline();
 
-    tl.set(deskLineEl, { scaleX: 0, opacity: 0.7 })
+    tl.set(deskLineEl, { scaleX: 0, opacity: 0.72 })
       .set(copyCardEl, {
         x: copyDx,
-        y: copyDy,
-        scale: 0.18,
-        rotateY: 18,
-        rotateZ: -6,
+        y: copyDy + 24,
+        scale: 0.68,
+        rotateY: 12,
+        rotateZ: -3,
         opacity: 0,
       })
       .set(portraitCardEl, {
         x: portraitDx,
-        y: portraitDy,
-        scale: 0.18,
-        rotateY: -18,
-        rotateZ: 6,
+        y: portraitDy + 24,
+        scale: 0.68,
+        rotateY: -12,
+        rotateZ: 3,
         opacity: 0,
       })
       .add(
         deskLineEl,
         {
           scaleX: [0, 1],
-          duration: 650,
-          ease: "outExpo",
+          duration: 720,
+          ease: easeSoft,
         },
         0
       )
-      // Deal Hero copy and portrait cards once Book is gone and Logo reaches center focus
       .add(
         deskLineEl,
         {
-          scaleX: [1, 0.25],
-          opacity: [0.7, 0],
-          duration: 500,
-          ease: "inQuad",
+          scaleX: [1, 0.2],
+          opacity: [0.72, 0],
+          duration: 540,
+          ease: cubicBezier(0.55, 0, 0.9, 0.6),
         },
-        1860
+        1720
       )
+      // Cards glide softly outward on weighted spring curves as the Logo settles into center depth
       .add(
         copyCardEl,
         {
           opacity: [0, 1],
-          duration: 240,
-          ease: "outQuad",
+          duration: 420,
+          ease: easeSoft,
         },
-        2920
+        2520
       )
       .add(
         copyCardEl,
         {
           x: [copyDx, 0],
-          y: [copyDy, 0],
-          scale: [0.22, 1],
-          rotateY: [14, 0],
-          rotateZ: [-4, 0],
-          ease: spring({ stiffness: 115, damping: 18 }),
+          y: [copyDy + 24, 0],
+          scale: [0.68, 1],
+          rotateY: [12, 0],
+          rotateZ: [-3, 0],
+          ease: spring({ bounce: 0.16, duration: 960 }),
         },
-        2920
+        2520
       )
       .add(
         portraitCardEl,
         {
           opacity: [0, 1],
-          duration: 240,
-          ease: "outQuad",
+          duration: 440,
+          ease: easeSoft,
         },
-        3120
+        2700
       )
       .add(
         portraitCardEl,
         {
           x: [portraitDx, 0],
-          y: [portraitDy, 0],
-          scale: [0.22, 1],
-          rotateY: [-14, 0],
-          rotateZ: [4, 0],
-          ease: spring({ stiffness: 115, damping: 18 }),
+          y: [portraitDy + 24, 0],
+          scale: [0.68, 1],
+          rotateY: [-12, 0],
+          rotateZ: [3, 0],
+          ease: spring({ bounce: 0.16, duration: 960 }),
         },
-        3120
+        2700
       );
 
     return () => {
       tl.revert();
     };
-  }, [reducedMotion]);
+  }, [reducedMotion, stageStatus]);
 
   // Fallback CSS book + SVG monogram choreography only if WebGL or GLB loading fails
   useEffect(() => {
