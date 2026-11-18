@@ -33,6 +33,8 @@ export function HeroSection() {
   const backdrop3dRef = useRef<HTMLDivElement>(null);
   const scrollHintRef = useRef<HTMLDivElement>(null);
   const scrollHintBtnRef = useRef<HTMLButtonElement>(null);
+  const progressRingRef = useRef<SVGCircleElement>(null);
+  const progressWrapRef = useRef<SVGSVGElement>(null);
   const heroScrollRef = useRef(0);
   const [stageStatus, setStageStatus] = useState<HeroStageStatus>("loading");
   const [reducedMotion, setReducedMotion] = useState(() =>
@@ -243,6 +245,26 @@ export function HeroSection() {
           );
         }
 
+        const progressWrapEl = progressWrapRef.current;
+        const progressRingEl = progressRingRef.current;
+        if (progressWrapEl && progressRingEl) {
+          const circumference = 2 * Math.PI * 48;
+          scrollTl
+            .fromTo(
+              progressWrapEl,
+              { opacity: 0 },
+              { opacity: 0.34, duration: 0.16, ease: "power2.out" },
+              0.02
+            )
+            .fromTo(
+              progressRingEl,
+              { strokeDashoffset: circumference },
+              { strokeDashoffset: 0, duration: 0.85, ease: "none" },
+              0.02
+            )
+            .to(progressWrapEl, { opacity: 0, duration: 0.22, ease: "power2.out" }, 0.78);
+        }
+
         scrollTl
           .fromTo(
             copyCardEl,
@@ -341,6 +363,27 @@ export function HeroSection() {
           scrollProgressRef={heroScrollRef}
           onStatusChange={setStageStatus}
         />
+
+        {!reducedMotion && (
+          <svg
+            ref={progressWrapRef}
+            viewBox="0 0 100 100"
+            fill="none"
+            className="pointer-events-none absolute h-[74vmin] w-[74vmin] max-h-[540px] max-w-[540px] -rotate-90 opacity-0 text-[#0A0A0A] dark:text-[#FAFAFA]"
+          >
+            <circle cx="50" cy="50" r="48" stroke="currentColor" strokeOpacity="0.22" strokeWidth="0.35" strokeDasharray="1.5 2.5" />
+            <circle
+              ref={progressRingRef}
+              cx="50"
+              cy="50"
+              r="48"
+              stroke="currentColor"
+              strokeWidth="0.6"
+              strokeDasharray={2 * Math.PI * 48}
+              strokeDashoffset={2 * Math.PI * 48}
+            />
+          </svg>
+        )}
 
         <div
           ref={deskLineRef}

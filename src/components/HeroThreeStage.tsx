@@ -290,6 +290,21 @@ export function HeroThreeStage({
         bookAnchor.add(bookRoot);
         logoAnchor.add(logoRoot);
 
+        // Axial layers expand along Z on scroll tilt, modeled after animejs.com's exploded diagram
+        const explodedLayers = [
+          { obj: gltf.scene.getObjectByName("LogoAInnerL"), offsetZ: -0.34 },
+          { obj: gltf.scene.getObjectByName("LogoAInnerR"), offsetZ: -0.34 },
+          { obj: gltf.scene.getObjectByName("LogoOrbitEllipse_1"), offsetZ: -0.22 },
+          { obj: gltf.scene.getObjectByName("LogoOuterRing"), offsetZ: 0.08 },
+          { obj: gltf.scene.getObjectByName("LogoALeftLeg"), offsetZ: 0.24 },
+          { obj: gltf.scene.getObjectByName("LogoARightLeg"), offsetZ: 0.24 },
+          { obj: gltf.scene.getObjectByName("LogoACrossbar"), offsetZ: 0.24 },
+          { obj: gltf.scene.getObjectByName("LogoOrbitEllipse_0"), offsetZ: 0.44 },
+          { obj: gltf.scene.getObjectByName("LogoOrbNode"), offsetZ: 0.62 },
+        ]
+          .filter((entry): entry is { obj: THREE.Object3D; offsetZ: number } => Boolean(entry.obj))
+          .map((entry) => ({ ...entry, baseZ: entry.obj.position.z }));
+
         applyThemePalette(
           managedMaterials,
           isDarkNow(),
@@ -438,13 +453,22 @@ export function HeroThreeStage({
 
             const elapsedSec = (now - idleStart) / 1000;
             const breathY = reducedMotion ? 0 : Math.sin(elapsedSec * 1.15) * 0.022;
-            const effectiveScale = animState.logoScale * (1 - 0.06 * scrollEase);
-            const effectiveZ = animState.logoPosZ - 0.48 * scrollEase;
+            const effectiveScale = animState.logoScale * (1 - 0.05 * scrollEase);
+            const effectiveZ = animState.logoPosZ - 0.38 * scrollEase;
 
             logoAnchor.visible = animState.logoScale > 0.03;
             logoAnchor.position.set(0, animState.logoPosY + breathY, effectiveZ);
-            logoAnchor.rotation.set(0, animState.logoRotY, 0);
+            logoAnchor.rotation.set(
+              reducedMotion ? 0 : 0.22 * scrollEase,
+              animState.logoRotY - (reducedMotion ? 0 : 0.36 * scrollEase),
+              0
+            );
             logoAnchor.scale.setScalar(effectiveScale);
+
+            const explodeFactor = reducedMotion ? 0 : scrollEase;
+            for (const layer of explodedLayers) {
+              layer.obj.position.z = layer.baseZ + layer.offsetZ * explodeFactor;
+            }
 
             const spread = animState.orbitSpread;
             const orbitSway = reducedMotion ? 0 : Math.sin(elapsedSec * 0.75) * 0.14 * spread;
