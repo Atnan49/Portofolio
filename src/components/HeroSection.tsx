@@ -106,44 +106,58 @@ export function HeroSection() {
         },
         0
       )
-      // Deal Hero copy and portrait cards outward once the 3D book opens and logo emerges
+      // Deal Hero copy and portrait cards cleanly after Book shrinks away and Logo takes center
+      .add(
+        deskLineEl,
+        {
+          scaleX: [1, 0.25],
+          opacity: [0.7, 0],
+          duration: 640,
+          ease: "inOutQuad",
+        },
+        2000
+      )
+      .add(
+        copyCardEl,
+        {
+          opacity: [0, 1],
+          duration: 240,
+          ease: "outQuad",
+        },
+        2580
+      )
       .add(
         copyCardEl,
         {
           x: [copyDx, 0],
           y: [copyDy, 0],
-          scale: [0.18, 1],
-          rotateY: [18, 0],
-          rotateZ: [-6, 0],
-          opacity: [0, 1],
-          duration: 1080,
+          scale: [0.22, 1],
+          rotateY: [14, 0],
+          rotateZ: [-4, 0],
           ease: spring({ stiffness: 115, damping: 18 }),
         },
-        1660
+        2580
+      )
+      .add(
+        portraitCardEl,
+        {
+          opacity: [0, 1],
+          duration: 240,
+          ease: "outQuad",
+        },
+        2800
       )
       .add(
         portraitCardEl,
         {
           x: [portraitDx, 0],
           y: [portraitDy, 0],
-          scale: [0.18, 1],
-          rotateY: [-18, 0],
-          rotateZ: [6, 0],
-          opacity: [0, 1],
-          duration: 1080,
+          scale: [0.22, 1],
+          rotateY: [-14, 0],
+          rotateZ: [4, 0],
           ease: spring({ stiffness: 115, damping: 18 }),
         },
-        1900
-      )
-      .add(
-        deskLineEl,
-        {
-          scaleX: [1, 0.25],
-          opacity: [0.7, 0],
-          duration: 700,
-          ease: "inOutQuad",
-        },
-        2480
+        2800
       );
 
     return () => {
@@ -290,7 +304,7 @@ export function HeroSection() {
 
         <div
           ref={deskLineRef}
-          className="js-hero-desk motion-reduce:hidden absolute top-[calc(52%+132px)] h-px w-[280px] bg-[#0A0A0A]/30 sm:top-[calc(52%+152px)] sm:w-[380px] dark:bg-[#FAFAFA]/30"
+          className="js-hero-desk motion-reduce:hidden absolute top-[73%] h-px w-[240px] bg-[#0A0A0A]/30 sm:top-[75%] sm:w-[320px] dark:bg-[#FAFAFA]/30"
         />
 
         {stageStatus === "fallback" && (
@@ -512,7 +526,7 @@ export function HeroSection() {
         <div className="js-hero-copy-parallax lg:col-span-7">
           <div
             ref={copyCardRef}
-            className="js-hero-copy-card flex flex-col gap-6 rounded border border-[#D4D4D4] bg-[#FFFFFF]/96 p-7 shadow-[0_22px_50px_-30px_rgba(10,10,10,0.2)] backdrop-blur-[2px] sm:p-9 lg:p-10 dark:border-[#262626] dark:bg-[#141414]/96 dark:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.9)]"
+            className="js-hero-copy-card flex flex-col gap-6 rounded border border-[#D4D4D4] bg-[#FFFFFF] p-7 shadow-[0_22px_50px_-30px_rgba(10,10,10,0.2)] sm:p-9 lg:p-10 dark:border-[#262626] dark:bg-[#141414] dark:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.9)]"
           >
             <div className="flex flex-col gap-3">
               <h1 className="font-serif text-[2.125rem] leading-[1.12] font-bold tracking-tight sm:text-5xl lg:text-[3.5rem]">

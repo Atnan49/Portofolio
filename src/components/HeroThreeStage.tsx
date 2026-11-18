@@ -130,8 +130,8 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 40);
-    camera.position.set(0, 0.25, 6.2);
-    camera.lookAt(0, 0.08, 0);
+    camera.position.set(0, 0.28, 6.4);
+    camera.lookAt(0, 0.05, 0);
 
     const pmrem = new THREE.PMREMGenerator(activeRenderer);
     const roomEnv = new RoomEnvironment();
@@ -162,7 +162,7 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
       const aspect = w / h;
       activeRenderer.setSize(w, h, false);
       camera.aspect = aspect;
-      camera.position.z = aspect < 1.15 ? 6.2 / Math.max(aspect * 1.05, 0.56) : 6.2;
+      camera.position.z = aspect < 1.15 ? 6.4 / Math.max(aspect * 1.05, 0.56) : 6.4;
       camera.updateProjectionMatrix();
     };
     syncViewport();
@@ -216,17 +216,17 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
     let logoOrbit1: THREE.Object3D | null = null;
 
     const animState = {
-      bookScale: 0.55,
+      bookScale: 0.48,
       bookPosX: -0.575,
-      bookPosY: -0.82,
-      bookPosZ: 0.25,
-      bookRotX: 0.2,
-      bookRotY: -0.34,
+      bookPosY: -1.12,
+      bookPosZ: 0.2,
+      bookRotX: 0.18,
+      bookRotY: -0.32,
       bookCoverAngle: 0,
-      logoScale: 0.01,
-      logoPosY: -0.36,
-      logoPosZ: -0.15,
-      logoRotY: -0.52,
+      logoScale: 0.001,
+      logoPosY: -0.25,
+      logoPosZ: 0.58,
+      logoRotY: -0.45,
       stageFade: 1,
     };
 
@@ -304,11 +304,11 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
           tl.add(
             animState,
             {
-              bookScale: [0.55, 1.0],
-              bookPosY: [-0.82, -0.38],
-              bookPosZ: [0.28, 0],
-              bookRotY: [-0.34, 0],
-              duration: 680,
+              bookScale: [0.48, 0.82],
+              bookPosY: [-1.12, -0.76],
+              bookPosZ: [0.22, 0.0],
+              bookRotY: [-0.32, 0],
+              duration: 620,
               ease: "outExpo",
             },
             0
@@ -316,64 +316,75 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
             .add(
               animState,
               {
-                bookRotX: [0.2, 0.56],
-                duration: 720,
+                bookRotX: [0.18, 0.48],
+                duration: 620,
                 ease: "inOutQuad",
               },
-              240
+              200
             )
-            // 2. Book cover pivots open and spine centers on X while pages part
+            // 2. Book cover pivots open and spine centers while pages spread
             .add(
               animState,
               {
                 bookCoverAngle: [0, Math.PI * 0.87],
                 bookPosX: [-0.575, 0],
-                duration: 960,
+                duration: 840,
                 ease: "inOutCubic",
               },
-              760
+              600
             )
-            // 3. Sculpted 3D Logo expands solidly out from inside the open book
+            // 3. Logo rises solidly strictly ABOVE & IN FRONT of the open book (zero page clipping)
             .add(
               animState,
               {
-                logoScale: [0.02, 1.06],
-                logoPosY: [-0.36, 0.16],
-                logoPosZ: [-0.15, 0.34],
-                logoRotY: [-0.52, 0],
-                duration: 1200,
+                logoScale: [0.001, 0.42],
+                logoPosY: [-0.24, 0.52],
+                logoPosZ: [0.58, 0.58],
+                logoRotY: [-0.45, 0],
+                duration: 720,
                 ease: "outExpo",
               },
-              1360
+              1320
             )
-            // 4. Book shrinks smoothly behind Logo and vanishes cleanly
+            // 4. Book shrinks back behind Logo and vanishes while Logo expands to center stage
             .add(
               animState,
               {
-                bookScale: [1.0, 0.02],
-                bookPosY: [-0.38, 0.08],
-                bookPosZ: [0, -1.4],
-                duration: 820,
+                bookScale: [0.82, 0.01],
+                bookPosY: [-0.76, 0.16],
+                bookPosZ: [0.0, -1.8],
+                duration: 700,
                 ease: "inOutCubic",
               },
-              2450
+              1980
             )
-            // 5. Stage softens into calm solid depth behind Hero cards via container opacity
             .add(
               animState,
               {
-                logoScale: [1.06, 0.94],
-                logoPosY: [0.16, 0.1],
-                logoPosZ: [0.34, -0.35],
+                logoScale: [0.42, 0.98],
+                logoPosY: [0.52, 0.14],
+                logoPosZ: [0.58, 0.12],
+                duration: 760,
+                ease: "outExpo",
+              },
+              2060
+            )
+            // 5. Logo softens into subtle architectural depth behind settled Hero cards
+            .add(
+              animState,
+              {
+                logoScale: [0.98, 0.94],
+                logoPosY: [0.14, 0.1],
+                logoPosZ: [0.12, -0.35],
                 stageFade: [1, 0],
-                duration: 860,
+                duration: 780,
                 ease: "inOutQuad",
               },
-              2580
+              2750
             );
 
           const elapsed = performance.now() - mountStartTime;
-          if (elapsed > 8 && elapsed < 3600) {
+          if (elapsed > 8 && elapsed < 3900) {
             tl.seek(elapsed);
           }
         }
