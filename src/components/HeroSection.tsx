@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { spring, createTimeline, cubicBezier, animate, stagger, svg } from "animejs";
+import { createTimeline, cubicBezier, animate, stagger, svg } from "animejs";
 import { PORTFOLIO_PROFILE } from "../data/portfolio";
-import { gsap, useGSAP } from "../lib/gsap";
+import { gsap, ScrollTrigger, useGSAP } from "../lib/gsap";
 import { useAnimeTilt3D } from "../lib/useAnimeTilt3D";
 import { HeroThreeStage, type HeroStageStatus } from "./HeroThreeStage";
 
@@ -31,6 +31,9 @@ export function HeroSection() {
   const stage3dRef = useRef<HTMLDivElement>(null);
   const plane3dRef = useRef<HTMLDivElement>(null);
   const backdrop3dRef = useRef<HTMLDivElement>(null);
+  const scrollHintRef = useRef<HTMLDivElement>(null);
+  const scrollHintBtnRef = useRef<HTMLButtonElement>(null);
+  const heroScrollRef = useRef(0);
   const [stageStatus, setStageStatus] = useState<HeroStageStatus>("loading");
   const [reducedMotion, setReducedMotion] = useState(() =>
     typeof window !== "undefined"
@@ -64,54 +67,20 @@ export function HeroSection() {
   useLayoutEffect(() => {
     if (typeof window === "undefined" || reducedMotion) return;
 
-    const sectionEl = sectionRef.current;
     const deskLineEl = deskLineRef.current;
-    const copyCardEl = copyCardRef.current;
-    const portraitCardEl = portraitCardRef.current;
+    const scrollHintBtnEl = scrollHintBtnRef.current;
+    if (!deskLineEl) return;
 
-    if (!sectionEl || !deskLineEl || !copyCardEl || !portraitCardEl) return;
-
-    // Wait until Three.js pre-compiles & starts (or falls back) so card deals lock cleanly to frame 0
     if (stageStatus === "loading") {
       deskLineEl.style.opacity = "0";
-      copyCardEl.style.opacity = "0";
-      portraitCardEl.style.opacity = "0";
+      if (scrollHintBtnEl) scrollHintBtnEl.style.opacity = "0";
       return;
     }
-
-    // Measure card targets relative to center desk origin where the 3D book opens
-    const sectionRect = sectionEl.getBoundingClientRect();
-    const copyRect = copyCardEl.getBoundingClientRect();
-    const portraitRect = portraitCardEl.getBoundingClientRect();
-
-    const originX = sectionRect.left + sectionRect.width * 0.5;
-    const originY = sectionRect.top + sectionRect.height * 0.52;
-
-    const copyDx = originX - (copyRect.left + copyRect.width * 0.5);
-    const copyDy = originY - (copyRect.top + copyRect.height * 0.5);
-    const portraitDx = originX - (portraitRect.left + portraitRect.width * 0.5);
-    const portraitDy = originY - (portraitRect.top + portraitRect.height * 0.5);
 
     const easeSoft = cubicBezier(0.16, 1, 0.3, 1);
     const tl = createTimeline();
 
     tl.set(deskLineEl, { scaleX: 0, opacity: 0.72 })
-      .set(copyCardEl, {
-        x: copyDx,
-        y: copyDy + 24,
-        scale: 0.68,
-        rotateY: 12,
-        rotateZ: -3,
-        opacity: 0,
-      })
-      .set(portraitCardEl, {
-        x: portraitDx,
-        y: portraitDy + 24,
-        scale: 0.68,
-        rotateY: -12,
-        rotateZ: 3,
-        opacity: 0,
-      })
       .add(
         deskLineEl,
         {
@@ -130,50 +99,20 @@ export function HeroSection() {
           ease: cubicBezier(0.55, 0, 0.9, 0.6),
         },
         1720
-      )
-      // Cards glide softly outward on weighted spring curves as the Logo settles into center depth
-      .add(
-        copyCardEl,
-        {
-          opacity: [0, 1],
-          duration: 420,
-          ease: easeSoft,
-        },
-        2520
-      )
-      .add(
-        copyCardEl,
-        {
-          x: [copyDx, 0],
-          y: [copyDy + 24, 0],
-          scale: [0.68, 1],
-          rotateY: [12, 0],
-          rotateZ: [-3, 0],
-          ease: spring({ bounce: 0.16, duration: 960 }),
-        },
-        2520
-      )
-      .add(
-        portraitCardEl,
-        {
-          opacity: [0, 1],
-          duration: 440,
-          ease: easeSoft,
-        },
-        2700
-      )
-      .add(
-        portraitCardEl,
-        {
-          x: [portraitDx, 0],
-          y: [portraitDy + 24, 0],
-          scale: [0.68, 1],
-          rotateY: [-12, 0],
-          rotateZ: [3, 0],
-          ease: spring({ bounce: 0.16, duration: 960 }),
-        },
-        2700
       );
+
+    if (scrollHintBtnEl) {
+      tl.set(scrollHintBtnEl, { opacity: 0, y: 10 }).add(
+        scrollHintBtnEl,
+        {
+          opacity: [0, 0.8],
+          y: [10, 0],
+          duration: 620,
+          ease: easeSoft,
+        },
+        2350
+      );
+    }
 
     return () => {
       tl.revert();
@@ -244,51 +183,127 @@ export function HeroSection() {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.fromTo(
-          ".js-hero-mark-parallax",
-          { y: 0, scale: 1 },
-          {
-            y: -46,
-            scale: 1.05,
-            ease: "none",
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: "top top",
-              end: "bottom top",
-              scrub: true,
-            },
-          }
-        );
+        const sectionEl = sectionRef.current;
+        const copyCardEl = copyCardRef.current;
+        const portraitCardEl = portraitCardRef.current;
+        const scrollHintEl = scrollHintRef.current;
+        const scrollHintBtnEl = scrollHintBtnRef.current;
+        if (!sectionEl || !copyCardEl || !portraitCardEl) return;
 
-        gsap.fromTo(
-          ".js-hero-copy-parallax",
-          { y: 0 },
-          {
-            y: -24,
-            ease: "none",
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: "top top",
-              end: "bottom top",
-              scrub: true,
-            },
-          }
-        );
+        // Measure untransformed slot wrappers so ScrollTrigger resize refreshes compute cleanly
+        const measureOffsets = () => {
+          const sectionRect = sectionEl.getBoundingClientRect();
+          const copySlotRect = (copyCardEl.parentElement ?? copyCardEl).getBoundingClientRect();
+          const portraitSlotRect = (
+            portraitCardEl.parentElement ?? portraitCardEl
+          ).getBoundingClientRect();
 
-        gsap.fromTo(
-          ".js-hero-portrait-parallax",
-          { y: 0 },
-          {
-            y: 38,
-            ease: "none",
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: "top top",
-              end: "bottom top",
-              scrub: true,
+          const originX = sectionRect.left + sectionRect.width * 0.5;
+          const originY =
+            sectionRect.top + Math.min(sectionRect.height, window.innerHeight - 72) * 0.5;
+
+          return {
+            copyDx: originX - (copySlotRect.left + copySlotRect.width * 0.5),
+            copyDy: originY - (copySlotRect.top + copySlotRect.height * 0.5),
+            portraitDx: originX - (portraitSlotRect.left + portraitSlotRect.width * 0.5),
+            portraitDy: originY - (portraitSlotRect.top + portraitSlotRect.height * 0.5),
+          };
+        };
+
+        copyCardEl.style.pointerEvents = "none";
+        portraitCardEl.style.pointerEvents = "none";
+
+        const scrollTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionEl,
+            start: "top 72",
+            end: "+=580",
+            pin: true,
+            scrub: 0.65,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              heroScrollRef.current = self.progress;
+              const interactive = self.progress > 0.35 ? "auto" : "none";
+              copyCardEl.style.pointerEvents = interactive;
+              portraitCardEl.style.pointerEvents = interactive;
+              if (scrollHintBtnEl) {
+                scrollHintBtnEl.style.pointerEvents = self.progress < 0.2 ? "auto" : "none";
+              }
             },
+          },
+        });
+
+        if (scrollHintEl) {
+          scrollTl.fromTo(
+            scrollHintEl,
+            { opacity: 1, y: 0 },
+            { opacity: 0, y: 12, duration: 0.26, ease: "power2.out" },
+            0
+          );
+        }
+
+        scrollTl
+          .fromTo(
+            copyCardEl,
+            {
+              x: () => measureOffsets().copyDx,
+              y: () => measureOffsets().copyDy + 24,
+              scale: 0.68,
+              rotateY: 12,
+              rotateZ: -3,
+              opacity: 0,
+            },
+            {
+              x: 0,
+              y: 0,
+              scale: 1,
+              rotateY: 0,
+              rotateZ: 0,
+              opacity: 1,
+              duration: 0.85,
+              ease: "power3.out",
+            },
+            0
+          )
+          .fromTo(
+            portraitCardEl,
+            {
+              x: () => measureOffsets().portraitDx,
+              y: () => measureOffsets().portraitDy + 24,
+              scale: 0.68,
+              rotateY: -12,
+              rotateZ: 3,
+              opacity: 0,
+            },
+            {
+              x: 0,
+              y: 0,
+              scale: 1,
+              rotateY: 0,
+              rotateZ: 0,
+              opacity: 1,
+              duration: 0.85,
+              ease: "power3.out",
+            },
+            0.15
+          );
+
+        let lastViewportW = window.innerWidth;
+        const resizeObserver = new ResizeObserver(() => {
+          const nextW = window.innerWidth;
+          if (nextW !== lastViewportW) {
+            lastViewportW = nextW;
+            ScrollTrigger.refresh();
           }
-        );
+        });
+        resizeObserver.observe(document.documentElement);
+
+        const rafId = requestAnimationFrame(() => ScrollTrigger.refresh());
+        return () => {
+          cancelAnimationFrame(rafId);
+          resizeObserver.disconnect();
+        };
       });
 
       return () => mm.revert();
@@ -299,8 +314,14 @@ export function HeroSection() {
   // Guard reduced-motion visual clean state on mount when CSS classes aren't reverted
   useEffect(() => {
     if (!reducedMotion) return;
-    if (copyCardRef.current) copyCardRef.current.style.opacity = "1";
-    if (portraitCardRef.current) portraitCardRef.current.style.opacity = "1";
+    if (copyCardRef.current) {
+      copyCardRef.current.style.opacity = "1";
+      copyCardRef.current.style.pointerEvents = "auto";
+    }
+    if (portraitCardRef.current) {
+      portraitCardRef.current.style.opacity = "1";
+      portraitCardRef.current.style.pointerEvents = "auto";
+    }
     if (emblemRef.current) emblemRef.current.style.opacity = "1";
   }, [reducedMotion]);
 
@@ -308,14 +329,18 @@ export function HeroSection() {
     <section
       id="hero"
       ref={sectionRef}
-      className="relative overflow-hidden border-b border-[#D4D4D4] bg-[#F7F7F5] text-[#0A0A0A] dark:border-[#262626] dark:bg-[#0A0A0A] dark:text-[#FAFAFA]"
+      className="relative !w-full !max-w-full overflow-hidden border-b border-[#D4D4D4] bg-[#F7F7F5] text-[#0A0A0A] dark:border-[#262626] dark:bg-[#0A0A0A] dark:text-[#FAFAFA]"
     >
       {/* Panggung 3D Blender (Buku Terbuka & Logo Monogram) + Garis Meja */}
       <div
         aria-hidden="true"
         className="js-hero-mark-parallax pointer-events-none absolute inset-0 z-0 flex items-center justify-center select-none"
       >
-        <HeroThreeStage reducedMotion={reducedMotion} onStatusChange={setStageStatus} />
+        <HeroThreeStage
+          reducedMotion={reducedMotion}
+          scrollProgressRef={heroScrollRef}
+          onStatusChange={setStageStatus}
+        />
 
         <div
           ref={deskLineRef}
@@ -536,8 +561,15 @@ export function HeroSection() {
         )}
       </div>
 
-      {/* Konten Hero Ditata Seperti Dua Kartu di Atas Meja */}
-      <div className="relative z-10 mx-auto grid min-h-[calc(100svh-4.5rem)] max-w-[1440px] grid-cols-1 items-center gap-10 px-5 py-10 md:px-10 md:py-16 lg:grid-cols-12 lg:gap-16 lg:px-20 lg:py-20 [perspective:1400px]">
+      {/* Konten Hero Ditata Seperti Dua Kartu di Atas Meja (Muncul Saat Digulir) */}
+      <div
+        onFocusCapture={() => {
+          if (!reducedMotion && window.scrollY < 500) {
+            window.scrollTo({ top: 580, behavior: "smooth" });
+          }
+        }}
+        className="relative z-10 mx-auto grid min-h-[calc(100svh-4.5rem)] max-w-[1440px] grid-cols-1 items-center gap-10 px-5 py-10 md:px-10 md:py-16 lg:grid-cols-12 lg:gap-16 lg:px-20 lg:py-20 [perspective:1400px]"
+      >
         <div className="js-hero-copy-parallax lg:col-span-7">
           <div
             ref={copyCardRef}
@@ -610,6 +642,23 @@ export function HeroSection() {
           </div>
         </div>
       </div>
+
+      {!reducedMotion && (
+        <div
+          ref={scrollHintRef}
+          className="pointer-events-none absolute inset-x-0 bottom-5 z-20 flex justify-center sm:bottom-7"
+        >
+          <button
+            ref={scrollHintBtnRef}
+            type="button"
+            onClick={() => window.scrollTo({ top: 580, behavior: "smooth" })}
+            className="pointer-events-auto inline-flex min-h-11 flex-col items-center gap-2 px-4 py-1 text-xs font-semibold tracking-[0.16em] uppercase text-[#525252] transition-colors duration-150 hover:text-[#0A0A0A] dark:text-[#A3A3A3] dark:hover:text-[#FAFAFA]"
+          >
+            <span>Gulir ke bawah</span>
+            <span aria-hidden="true" className="block h-5 w-px bg-current opacity-55" />
+          </button>
+        </div>
+      )}
     </section>
   );
 }

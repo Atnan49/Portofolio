@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type MutableRefObject } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
@@ -8,6 +8,7 @@ export type HeroStageStatus = "loading" | "ready" | "fallback";
 
 interface HeroThreeStageProps {
   reducedMotion: boolean;
+  scrollProgressRef?: MutableRefObject<number>;
   onStatusChange?: (status: HeroStageStatus) => void;
 }
 
@@ -87,7 +88,11 @@ function applyThemePalette(
   }
 }
 
-export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStageProps) {
+export function HeroThreeStage({
+  reducedMotion,
+  scrollProgressRef,
+  onStatusChange,
+}: HeroThreeStageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const statusCbRef = useRef(onStatusChange);
   statusCbRef.current = onStatusChange;
@@ -228,7 +233,6 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
       logoPosZ: 0.68,
       logoRotY: -1.15,
       orbitSpread: 0,
-      stageFade: 1,
     };
 
     const easeSmoothOut = cubicBezier(0.16, 1, 0.3, 1);
@@ -307,10 +311,9 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
           animState.bookScale = 0;
           animState.logoScale = 0.94;
           animState.logoPosY = 0.1;
-          animState.logoPosZ = -0.35;
+          animState.logoPosZ = 0.14;
           animState.logoRotY = 0;
           animState.orbitSpread = 1;
-          animState.stageFade = 0;
         } else {
           const tl = createTimeline();
           activeTimeline = tl;
@@ -399,28 +402,17 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
               },
               1720
             )
-            // 5. Continuous S-curve sweep from apex hover into full center focus (zero dead stop)
+            // 5. Continuous S-curve sweep from apex hover into full gleaming center showcase
             .add(
               animState,
               {
-                logoScale: [0.34, 0.96],
-                logoPosY: [0.78, 0.1],
-                duration: 900,
+                logoScale: [0.34, 0.98],
+                logoPosY: [0.78, 0.08],
+                logoPosZ: [0.68, 0.14],
+                duration: 920,
                 ease: easeLogoGlide,
               },
               1940
-            )
-            // 6. Soft atmospheric recession into subtle depth as Hero cards glide into layout
-            .add(
-              animState,
-              {
-                logoScale: [0.96, 0.94],
-                logoPosZ: [0.68, -0.35],
-                stageFade: [1, 0],
-                duration: 920,
-                ease: easeGentleBlend,
-              },
-              2560
             );
         }
 
@@ -439,11 +431,19 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
             bookRoot.position.x = animState.bookPosX;
             bookFrontPivot.rotation.z = animState.bookCoverAngle;
 
+            const rawScroll = scrollProgressRef?.current ?? 0;
+            const scrollEase = reducedMotion
+              ? 1
+              : THREE.MathUtils.smoothstep(THREE.MathUtils.clamp(rawScroll, 0, 1), 0, 1);
+
             const breathY = reducedMotion ? 0 : Math.sin(((now - idleStart) / 1000) * 1.15) * 0.022;
+            const effectiveScale = animState.logoScale * (1 - 0.06 * scrollEase);
+            const effectiveZ = animState.logoPosZ - 0.48 * scrollEase;
+
             logoAnchor.visible = animState.logoScale > 0.03;
-            logoAnchor.position.set(0, animState.logoPosY + breathY, animState.logoPosZ);
+            logoAnchor.position.set(0, animState.logoPosY + breathY, effectiveZ);
             logoAnchor.rotation.set(0, animState.logoRotY, 0);
-            logoAnchor.scale.setScalar(animState.logoScale);
+            logoAnchor.scale.setScalar(effectiveScale);
 
             const spread = animState.orbitSpread;
             if (logoOrbit0) {
@@ -455,8 +455,8 @@ export function HeroThreeStage({ reducedMotion, onStatusChange }: HeroThreeStage
               logoOrbit1.rotation.y = ellipse1BaseY * (0.15 + 0.85 * spread);
             }
 
-            const settledOpacity = isDarkNow() ? 0.36 : 0.3;
-            const targetOpacity = settledOpacity + (1 - settledOpacity) * animState.stageFade;
+            const settledOpacity = isDarkNow() ? 0.34 : 0.28;
+            const targetOpacity = 1 - (1 - settledOpacity) * scrollEase;
             container.style.opacity = targetOpacity.toFixed(3);
 
             if (!reducedMotion && logoAnchor.visible) {
