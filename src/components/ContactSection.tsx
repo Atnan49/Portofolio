@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
 import { PORTFOLIO_PROFILE } from "../data/portfolio";
+import { SplitText, gsap, useGSAP } from "../lib/gsap";
 import {
   buildMailtoHref,
   validateContactField,
@@ -9,10 +9,8 @@ import {
   type ContactFormValues,
 } from "../utils/contact";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
-
 export function ContactSection() {
-  const shouldReduceMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
   const [values, setValues] = useState<ContactFormValues>({
     name: "",
     email: "",
@@ -26,46 +24,177 @@ export function ContactSection() {
   const emailRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
 
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        SplitText.create(".js-contact-title", {
+          type: "lines",
+          mask: "lines",
+          linesClass: "gsap-split-line",
+          autoSplit: true,
+          onSplit(self) {
+            return gsap.from(self.lines, {
+              yPercent: 112,
+              duration: 0.48,
+              ease: "power4.out",
+              scrollTrigger: {
+                trigger: ".js-contact-info",
+                start: "top 90%",
+                end: "bottom top",
+                toggleActions: "play reverse play reverse",
+              },
+            });
+          },
+        });
+
+        SplitText.create(".js-contact-headline", {
+          type: "lines",
+          mask: "lines",
+          linesClass: "gsap-split-line",
+          autoSplit: true,
+          onSplit(self) {
+            return gsap.from(self.lines, {
+              yPercent: 112,
+              duration: 0.54,
+              stagger: 0.06,
+              ease: "power4.out",
+              scrollTrigger: {
+                trigger: ".js-contact-info",
+                start: "top 90%",
+                end: "bottom top",
+                toggleActions: "play reverse play reverse",
+              },
+            });
+          },
+        });
+
+        const infoTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".js-contact-info",
+            start: "top 88%",
+            end: "bottom top",
+            toggleActions: "play reverse play reverse",
+          },
+        });
+
+        infoTl
+          .from(".js-contact-copy", {
+            clipPath: "inset(0% 100% 0% 0%)",
+            x: -24,
+            duration: 0.48,
+            ease: "power3.out",
+          })
+          .from(
+            ".js-contact-actions",
+            {
+              clipPath: "inset(0% 100% 0% 0%)",
+              x: -24,
+              duration: 0.48,
+              ease: "power3.out",
+            },
+            0.08
+          );
+
+        const formTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".js-contact-form",
+            start: "top 92%",
+            end: "bottom top",
+            toggleActions: "play reverse play reverse",
+          },
+        });
+
+        formTl
+          .from(".js-contact-form", {
+            clipPath: "inset(100% 0% 0% 0%)",
+            y: 36,
+            scale: 0.94,
+            duration: 0.54,
+            ease: "power3.out",
+          })
+          .from(
+            ".js-contact-field",
+            {
+              y: 16,
+              duration: 0.4,
+              stagger: 0.05,
+              ease: "power3.out",
+            },
+            0.12
+          );
+
+        const footerTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".js-footer",
+            start: "top 98%",
+            end: "bottom top",
+            toggleActions: "play reverse play reverse",
+          },
+        });
+
+        footerTl
+          .from(".js-footer-rule", {
+            scaleX: 0,
+            transformOrigin: "left center",
+            duration: 0.45,
+            ease: "power3.out",
+          })
+          .from(
+            ".js-footer-item",
+            {
+              clipPath: "inset(0% 0% 100% 0%)",
+              y: 18,
+              duration: 0.4,
+              stagger: 0.06,
+              ease: "power3.out",
+            },
+            0.06
+          );
+      });
+
+      return () => mm.revert();
+    },
+    { scope: sectionRef }
+  );
+
   const handleFieldChange = (field: keyof ContactFormValues, nextValue: string) => {
     setValues((prev) => ({ ...prev, [field]: nextValue }));
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
+      const nextError = validateContactField(field, nextValue);
+      setErrors((prev) => ({ ...prev, [field]: nextError }));
     }
-    if (statusMessage) setStatusMessage("");
   };
 
   const handleFieldBlur = (field: keyof ContactFormValues) => {
-    const current = values[field];
-    if (!current.trim() && !errors[field]) return;
-    const error = validateContactField(field, current);
+    const error = validateContactField(field, values[field]);
     setErrors((prev) => ({ ...prev, [field]: error }));
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    const nextErrors = validateContactForm(values);
-    setErrors(nextErrors);
+    const validationErrors = validateContactForm(values);
+    setErrors(validationErrors);
 
-    if (nextErrors.name) {
+    if (validationErrors.name) {
       nameRef.current?.focus();
-      setStatusMessage("Periksa kembali kolom yang masih perlu diperbaiki.");
+      setStatusMessage("Periksa kembali kolom nama sebelum mengirim.");
       return;
     }
-    if (nextErrors.email) {
+    if (validationErrors.email) {
       emailRef.current?.focus();
-      setStatusMessage("Periksa kembali kolom yang masih perlu diperbaiki.");
+      setStatusMessage("Periksa kembali format alamat email.");
       return;
     }
-    if (nextErrors.message) {
+    if (validationErrors.message) {
       messageRef.current?.focus();
-      setStatusMessage("Periksa kembali kolom yang masih perlu diperbaiki.");
+      setStatusMessage("Pesan minimal 10 karakter.");
       return;
     }
 
     const href = buildMailtoHref(PORTFOLIO_PROFILE.email, values);
-    setStatusMessage(
-      `Draf email ke ${PORTFOLIO_PROFILE.email} siap dikirim melalui aplikasi emailmu.`
-    );
+    setStatusMessage("Membuka aplikasi email untuk mengirim pesan...");
     window.location.href = href;
   };
 
@@ -85,30 +214,25 @@ export function ContactSection() {
   return (
     <section
       id="kontak"
-      className="bg-[#0A0A0A] text-[#FAFAFA] dark:border-t dark:border-[#262626] dark:bg-[#0A0A0A]"
+      ref={sectionRef}
+      className="overflow-x-clip bg-[#0A0A0A] text-[#FAFAFA] dark:border-t dark:border-[#262626] dark:bg-[#0A0A0A]"
     >
       <div className="mx-auto flex max-w-[1440px] flex-col gap-14 px-5 pt-16 pb-10 md:px-10 md:pt-20 lg:gap-16 lg:px-20 lg:pt-24 lg:pb-12">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
-          <motion.div
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, ease: EASE }}
-            className="flex flex-col gap-5 lg:col-span-6"
-          >
-            <h2 className="font-serif text-2xl font-bold md:text-[1.75rem]">
+          <div className="js-contact-info flex flex-col gap-5 lg:col-span-6">
+            <h2 className="js-contact-title font-serif text-2xl font-bold md:text-[1.75rem]">
               Kontak
             </h2>
 
-            <p className="font-serif text-3xl leading-[1.2] text-[#FAFAFA] md:text-[2.5rem]">
+            <p className="js-contact-headline font-serif text-3xl leading-[1.2] text-[#FAFAFA] md:text-[2.5rem]">
               Mari berdiskusi soal proyek app, web, atau IoT.
             </p>
 
-            <p className="max-w-lg text-[15px] leading-[1.65] text-[#A3A3A3] md:text-base">
+            <p className="js-contact-copy max-w-lg text-[15px] leading-[1.65] text-[#A3A3A3] md:text-base">
               Terbuka untuk kolaborasi pengembangan perangkat lunak dan proyek web. Kamu bisa mengirim pesan lewat formulir di samping atau melihat kode publikku di GitHub.
             </p>
 
-            <div className="flex flex-wrap items-center gap-5 pt-3">
+            <div className="js-contact-actions flex flex-wrap items-center gap-5 pt-3">
               <a
                 href={`mailto:${PORTFOLIO_PROFILE.email}`}
                 className="inline-flex min-h-11 items-center border-b border-[#FAFAFA] px-0.5 text-[15px] font-semibold text-[#FAFAFA] transition-opacity hover:opacity-75"
@@ -116,14 +240,13 @@ export function ContactSection() {
                 {PORTFOLIO_PROFILE.email}
               </a>
 
-              <motion.button
+              <button
                 type="button"
                 onClick={handleCopyEmail}
-                whileTap={{ scale: 0.97 }}
-                className="inline-flex min-h-11 items-center justify-center rounded border border-[#737373] bg-[#141414] px-4 text-sm font-semibold text-[#FAFAFA] transition-colors hover:bg-[#FAFAFA] hover:text-[#0A0A0A]"
+                className="inline-flex min-h-11 items-center justify-center rounded border border-[#737373] bg-[#141414] px-4 text-sm font-semibold text-[#FAFAFA] transition-all duration-150 hover:bg-[#FAFAFA] hover:text-[#0A0A0A] active:scale-[0.97]"
               >
                 {copied ? "Email Disalin" : "Salin Email"}
-              </motion.button>
+              </button>
 
               <a
                 href={PORTFOLIO_PROFILE.githubUrl}
@@ -134,23 +257,19 @@ export function ContactSection() {
                 {PORTFOLIO_PROFILE.githubHandle}
               </a>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.form
+          <form
             noValidate
             aria-labelledby="contact-form-heading"
             onSubmit={handleSubmit}
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: 0.08, ease: EASE }}
-            className="flex flex-col gap-5 rounded border border-[#262626] bg-[#141414] p-6 md:p-8 lg:col-span-6"
+            className="js-contact-form flex flex-col gap-5 rounded border border-[#262626] bg-[#141414] p-6 md:p-8 lg:col-span-6"
           >
             <h3 id="contact-form-heading" className="visually-hidden">
               Formulir Kirim Pesan
             </h3>
 
-            <div className="flex flex-col gap-2">
+            <div className="js-contact-field flex flex-col gap-2">
               <label
                 htmlFor="contact-name"
                 className="text-[13px] font-semibold text-[#FAFAFA]"
@@ -181,7 +300,7 @@ export function ContactSection() {
               ) : null}
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="js-contact-field flex flex-col gap-2">
               <label
                 htmlFor="contact-email"
                 className="text-[13px] font-semibold text-[#FAFAFA]"
@@ -195,8 +314,7 @@ export function ContactSection() {
                 type="email"
                 required
                 autoComplete="email"
-                autoCorrect="off"
-                autoCapitalize="none"
+                inputMode="email"
                 spellCheck={false}
                 enterKeyHint="next"
                 placeholder="nama@domain.com"
@@ -214,7 +332,7 @@ export function ContactSection() {
               ) : null}
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="js-contact-field flex flex-col gap-2">
               <label
                 htmlFor="contact-message"
                 className="text-[13px] font-semibold text-[#FAFAFA]"
@@ -244,29 +362,32 @@ export function ContactSection() {
               ) : null}
             </div>
 
-            <motion.button
+            <button
               type="submit"
-              whileHover={{ y: -1 }}
-              whileTap={{ scale: 0.985 }}
-              className="mt-1 inline-flex min-h-12 w-full items-center justify-center rounded bg-[#FAFAFA] px-6 py-3 text-[15px] font-bold text-[#0A0A0A] transition-colors hover:bg-[#D4D4D4]"
+              className="js-contact-field mt-1 inline-flex min-h-12 w-full items-center justify-center rounded bg-[#FAFAFA] px-6 py-3 text-[15px] font-bold text-[#0A0A0A] transition-colors duration-150 hover:bg-[#D4D4D4]"
             >
               Kirim Pesan
-            </motion.button>
+            </button>
 
             <p role="status" aria-live="polite" className="min-h-5 text-sm text-[#D4D4D4]">
               {statusMessage}
             </p>
-          </motion.form>
+          </form>
         </div>
 
-        <footer className="flex flex-col justify-between gap-3 border-t border-[#262626] pt-7 text-[13px] sm:flex-row sm:items-center">
-          <p className="text-[#A3A3A3]">{PORTFOLIO_PROFILE.footerText}</p>
-          <a
-            href="#hero"
-            className="inline-flex min-h-11 items-center font-semibold text-[#FAFAFA] transition-opacity hover:opacity-75"
-          >
-            Kembali ke Atas
-          </a>
+        <footer className="js-footer">
+          <div className="js-footer-rule h-px bg-[#262626]" />
+          <div className="flex flex-col justify-between gap-3 pt-7 text-[13px] sm:flex-row sm:items-center">
+            <p className="js-footer-item text-[#A3A3A3]">
+              {PORTFOLIO_PROFILE.footerText}
+            </p>
+            <a
+              href="#hero"
+              className="js-footer-item inline-flex min-h-11 items-center font-semibold text-[#FAFAFA] transition-opacity hover:opacity-75"
+            >
+              Kembali ke Atas
+            </a>
+          </div>
         </footer>
       </div>
     </section>

@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import { PORTFOLIO_PROFILE } from "../data/portfolio";
 import type { ResolvedTheme } from "../utils/theme";
 
@@ -46,38 +45,34 @@ export function Header({ resolvedTheme, onToggleTheme, onOpenMobileMenu }: Heade
             </a>
           ))}
 
-          <motion.button
+          <button
             type="button"
             onClick={onToggleTheme}
             aria-label={themeAriaLabel}
-            whileHover={{ y: -1 }}
-            whileTap={{ scale: 0.97 }}
-            className="inline-flex min-h-11 items-center justify-center rounded border border-[#737373] bg-[#FFFFFF] px-4 text-[13px] font-semibold text-[#0A0A0A] transition-colors hover:bg-[#0A0A0A] hover:text-[#FAFAFA] dark:bg-[#141414] dark:text-[#FAFAFA] dark:hover:bg-[#FAFAFA] dark:hover:text-[#0A0A0A]"
+            className="inline-flex min-h-11 items-center justify-center rounded border border-[#737373] bg-[#FFFFFF] px-4 text-[13px] font-semibold text-[#0A0A0A] transition-all duration-150 hover:-translate-y-0.5 hover:bg-[#0A0A0A] hover:text-[#FAFAFA] active:scale-[0.97] dark:bg-[#141414] dark:text-[#FAFAFA] dark:hover:bg-[#FAFAFA] dark:hover:text-[#0A0A0A]"
           >
             {nextLabel}
-          </motion.button>
+          </button>
         </nav>
 
         <div className="flex items-center gap-2.5 md:hidden">
-          <motion.button
+          <button
             type="button"
             onClick={onToggleTheme}
             aria-label={themeAriaLabel}
-            whileTap={{ scale: 0.96 }}
-            className="inline-flex min-h-11 items-center justify-center rounded border border-[#737373] bg-[#FFFFFF] px-3 text-[13px] font-semibold text-[#0A0A0A] dark:bg-[#141414] dark:text-[#FAFAFA]"
+            className="inline-flex min-h-11 items-center justify-center rounded border border-[#737373] bg-[#FFFFFF] px-3 text-[13px] font-semibold text-[#0A0A0A] transition-transform duration-150 active:scale-[0.96] dark:bg-[#141414] dark:text-[#FAFAFA]"
           >
             {resolvedTheme === "dark" ? "Terang" : "Gelap"}
-          </motion.button>
+          </button>
 
-          <motion.button
+          <button
             type="button"
             onClick={onOpenMobileMenu}
             aria-haspopup="dialog"
-            whileTap={{ scale: 0.96 }}
-            className="inline-flex min-h-11 items-center justify-center rounded bg-[#0A0A0A] px-3.5 text-[13px] font-bold text-[#FAFAFA] dark:bg-[#FAFAFA] dark:text-[#0A0A0A]"
+            className="inline-flex min-h-11 items-center justify-center rounded bg-[#0A0A0A] px-3.5 text-[13px] font-bold text-[#FAFAFA] transition-transform duration-150 active:scale-[0.96] dark:bg-[#FAFAFA] dark:text-[#0A0A0A]"
           >
             Menu
-          </motion.button>
+          </button>
         </div>
       </div>
     </header>
